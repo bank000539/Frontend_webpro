@@ -33,11 +33,13 @@
             </v-list-tile-action>
             <v-list-tile-content>BOOKING</v-list-tile-content>
           </v-list-tile>
+        </router-link>
+        <router-link v-bind:to="{ name: 'DashBoard' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
               <v-icon>contact_mail</v-icon>
             </v-list-tile-action>
-            <v-list-tile-content>CHECK/EDIT BOOKING</v-list-tile-content>
+            <v-list-tile-content>DASHBOARD BOOKING</v-list-tile-content>
           </v-list-tile>
         </router-link>
       </v-list>
