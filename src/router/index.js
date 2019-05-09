@@ -46,6 +46,6 @@ export default new Router({
       path: '/dashboard/checkout',
       name: 'Checkout',
       component: Checkout
-    }
+    },
   ]
 })
