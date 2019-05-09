@@ -7,6 +7,9 @@ import DashBoard from '@/components/DashBoard'
 import Edit from '@/components/Edit'
 import Approve from '@/components/Approve'
 import Checkout from '@/components/Checkout'
+import EquipmentForm from '@/components/EquipmentForm'
+import RoomForm from '@/components/RoomForm'
+import UserForm from '@/components/UserForm'
 
 Vue.use(Router)
 
@@ -47,5 +50,20 @@ export default new Router({
       name: 'Checkout',
       component: Checkout
     },
+    {
+      path: '/equipment',
+      name: 'EquipmentForm',
+      component: EquipmentForm
+    },
+    {
+      path: '/room',
+      name: 'RoomForm',
+      component: RoomForm
+    },
+    {
+      path: '/user',
+      name: 'UserForm',
+      component: UserForm
+    }
   ]
 })
