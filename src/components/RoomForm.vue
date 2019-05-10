@@ -131,6 +131,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
@@ -147,11 +148,29 @@ export default {
     equipments: []
   }),
   methods: {
-    save() {
+    async save() {
       if (this.$route.params.title == "edit") {
         console.log("Edit", this.$route.params.id, this.Room);
+        this.Room.roomName = this.Room.name
+        let data = this.Room
+        delete data.name
+        delete data._id
+        let result = await axios.post('/room/editRoom',{_id:this.$route.params.id,data})
+        if(result.data.code === 500){
+        alert(result.data.result)
+      }else{
+        this.$router.push('/room')
+      }
       } else {
         console.log("Add", this.Room);
+        this.Room.roomName = this.Room.name
+        let result = await axios.post('/room/createRoom',this.Room)
+        console.log(result)
+        if(result.data.code === 500){
+        alert(result.data.result)
+      }else{
+        this.$router.push('/room')
+      }
       }
       this.dialog = false;
     },
@@ -205,39 +224,12 @@ export default {
       this.Room.equipments[this.Room.equipments.length - 1].defaultcheck = true;
       this.Room.equipments[this.Room.equipments.length - 1].amount = 1;
     },
-    setdata() {
-      this.Room = {
-        name: "Test",
-        support: {
-          _id: "asd3",
-          firstname: "Meaw3",
-          lastname: "Min2",
-          email: "test@mail.com",
-          role: "support",
-          available: true
-        },
-        description: "Test naja",
-        equipments: [
-          {
-            _id: "asqewd",
-            name: "Projecture",
-            description: "",
-            amount: 2,
-            defaultcheck: true,
-            divider: true,
-            inset: true
-          },
-          {
-            _id: "asasdd",
-            name: "Computer",
-            description: "",
-            amount: 1,
-            defaultcheck: true,
-            divider: true,
-            inset: true
-          }
-        ]
-      };
+    async setdata() {
+      let data = await axios.post('/room/getRoom',{})
+        let id = this.$route.params.id
+        let findData = data.data.result.find(el=>el._id===id)
+        findData.name = findData.roomName
+        this.Room=findData
     }
   },
   created() {
