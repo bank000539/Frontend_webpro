@@ -144,6 +144,7 @@
       </v-flex>
       <v-flex xs7>
         <v-switch
+          :disabled="$route.params.title ==='add'"
           v-model="Book.checkout"
           :readonly="_readonly"
           :label="Book.checkout?'PASS':'NOT PASS'"
@@ -243,7 +244,7 @@
           </v-layout>
           <v-layout wrap>
             <v-flex xs3 offset-xs1>
-              <v-subheader>CHECKOUT</v-subheader>
+              <v-subheader >CHECKOUT</v-subheader>
             </v-flex>
             <v-flex xs7>
               <v-text-field readonly>{{Book.checkout?'PASS':'NOT PASS'}}</v-text-field>
@@ -305,6 +306,7 @@ export default {
       this._readonly = true;
       this.setdata();
     } else if (this.$route.params.title == "add") {
+      this.status= ["waiting"],
       this._readonly = false;
     } else {
       this._readonly = false;
@@ -327,6 +329,7 @@ export default {
         day.setMinutes(parseInt(bookData.end_time.split(":")[1]))
         bookData.end= day.getTime()
         bookData.roomName = bookData.room.roomName
+        bookData.equipment = bookData.equipments
         console.log(bookData)
         let result = await axios.post('/room/bookingRoom',bookData)
         if(result.data.code === 500){
@@ -346,23 +349,6 @@ export default {
       let data = await axios.post('/equipment/getEquipment',{})
       console.log(data)
       this.equipments = data.data.result.map(el=>{el.name = el.equipmentName;return el})
-      // this.equipments = [
-      //   {
-      //     _id: "asd",
-      //     name: "Lecture Chair",
-      //     description: ""
-      //   },
-      //   {
-      //     _id: "asasdd",
-      //     name: "Computer",
-      //     description: ""
-      //   },
-      //   {
-      //     _id: "asqewd",
-      //     name: "Projecture",
-      //     description: ""
-      //   }
-      // ];
     },
     updateequip() {
       // this.equipments = this.Book.room.equipments
@@ -376,80 +362,7 @@ export default {
       this.Book.equipments[this.Book.equipments.length - 1].amount = 1;
     },
     setdata() {
-      this.Book = {
-        date: new Date().toISOString().substr(0, 10),
-        user: {
-          firstname: "Monar",
-          lastname: "lisa"
-        },
-        start_time: "09:00:00",
-        end_time: "12:00:00",
-        subject: "Test",
-        status: "waiting",
-        checkout: false,
-        room: {
-          name: "6275",
-          equipments: [
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 2,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asd",
-              name: "Lecture Chair",
-              description: "",
-              amount: 40,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 1,
-              defaultcheck: false,
-              divider: true,
-              inset: true
-            }
-          ],
-          support: {
-            _id: "asd3",
-            firstname: "Meaw3",
-            lastname: "Min2",
-            email: "test@mail.com",
-            role: "support",
-            available: true
-          },
-          description: "Lecture Room"
-        },
-        description: "Test naja",
-        equipments: [
-          {
-            _id: "asqewd",
-            name: "Projecture",
-            description: "",
-            amount: 2,
-            defaultcheck: true,
-            divider: true,
-            inset: true
-          },
-          {
-            _id: "asasdd",
-            name: "Computer",
-            description: "",
-            amount: 1,
-            defaultcheck: true,
-            divider: true,
-            inset: true
-          }
-        ]
-      };
+
     },
     download() {
       var doc = new jsPDF();
