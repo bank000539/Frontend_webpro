@@ -1,21 +1,8 @@
 <template>
   <div>
-    <v-tabs
-      v-model="active"
-      fixed-tabs
-    >
-      <v-tab
-        v-for="n in 3"
-        :key="n"
-        ripple
-      >
-         {{ status[n-1] }}
-
-      </v-tab>
-      <v-tab-item
-        v-for="n in 3"
-        :key="n"
-      >
+    <v-tabs v-model="active" fixed-tabs>
+      <v-tab v-for="n in 3" :key="n" ripple>{{ status[n-1] }}</v-tab>
+      <v-tab-item v-for="n in 3" :key="n">
         <v-card>
           <v-card-title>
             <v-text-field
@@ -26,7 +13,12 @@
               hide-details
             ></v-text-field>
           </v-card-title>
-          <v-data-table  :headers="headers" :items="bookings_[n-1]" class="elevation-1" :search="search">
+          <v-data-table
+            :headers="headers"
+            :items="bookings_[n-1]"
+            class="elevation-1"
+            :search="search"
+          >
             <template v-slot:items="props">
               <td>{{ props.item.date }}</td>
               <td>{{ props.item.room.name }}</td>
@@ -51,32 +43,32 @@
           </v-data-table>
         </v-card>
       </v-tab-item>
-          <v-layout row justify-center>
-      <v-dialog v-model="dialog" persistent max-width="800">
-        <template></template>
-        <v-card>
-          <v-card-title class="headline">CONFIRM DELETE?</v-card-title>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" @click="dialog = false">BACK</v-btn>
-            <v-btn color="error" @click="del(del_id)">CONFIRM</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-layout>
+      <v-layout row justify-center>
+        <v-dialog v-model="dialog" persistent max-width="800">
+          <template></template>
+          <v-card>
+            <v-card-title class="headline">CONFIRM DELETE?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" @click="dialog = false">BACK</v-btn>
+              <v-btn color="error" @click="del(del_id)">CONFIRM</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-layout>
     </v-tabs>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   data() {
     return {
       search: "",
       del_id: "",
       dialog: false,
-      tabs:null,
+      tabs: null,
       status: ["waiting", "approve", "denied"],
       headers: [
         {
@@ -94,7 +86,7 @@ export default {
       ],
       bookings: [],
       active: null,
-      bookings_: [[],[],[]]
+      bookings_: [[], [], []]
     };
   },
   methods: {
@@ -102,36 +94,67 @@ export default {
       this.dialog = true;
       this.del_id = id;
     },
-    del(id) {}
+    async del(id) {
+      let result = await axios.post("/room/cancelBooking", { _id: id });
+      console.log(result);
+      if (result.data.code === 500) {
+        alert(result.data.result);
+      } else {
+        this.dialog = false;
+        this.del_id = "";
+        this.setdata();
+      }
+    },
+    async setdata() {
+      let result = await axios.post("/room/getBooking", {});
+      console.log(result.data.result);
+      this.bookings = result.data.result.map(el => {
+        let time = new Date(el.start);
+        el.room = { name: el.roomName };
+        el.date =
+          time.getFullYear() +
+          "-" +
+          (time.getMonth().toString().length !== 1
+            ? time.getMonth()
+            : "0" + time.getMonth()) +
+          "-" +
+          time.getDate();
+        el.start_time =
+          (time.getHours().toString().length !== 1
+            ? time.getHours()
+            : "0" + time.getHours()) +
+          ":" +
+          (time.getMinutes().toString().length !== 1
+            ? time.getMinutes()
+            : time.getMinutes() + "0");
+        time = new Date(el.end);
+        el.end_time =
+          (time.getHours().toString().length !== 1
+            ? time.getHours()
+            : "0" + time.getHours()) +
+          ":" +
+          (time.getMinutes().toString().length !== 1
+            ? time.getMinutes()
+            : time.getMinutes() + "0");
+        return el;
+      });
+      console.log(this.bookings);
+      this.bookings_ = [];
+      this.bookings_[0] = this.bookings.filter(item => {
+        return item.status == "waiting";
+      });
+      this.bookings_[1] = this.bookings.filter(item => {
+        return item.status == "approve";
+      });
+      this.bookings_[2] = this.bookings.filter(item => {
+        return item.status == "denied";
+      });
+      console.log(this.bookings_w);
+    }
   },
-  async created() {
-    let result = await axios.post('/room/getBooking',{})
-    console.log(result.data.result)
-    this.bookings = result.data.result.map(el=>{
-      let time = new Date(el.start)
-      el.room = {name:el.roomName}
-      el.date = time.getFullYear()+"-"+(time.getMonth().toString().length !== 1
-          ? time.getMonth()
-          : "0"+time.getMonth()) +"-"+time.getDate()
-      el.start_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")
-      time = new Date(el.end)
-      el.end_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")
-      return el
-    })
-    console.log(this.bookings)
-    this.bookings_=[]
-    this.bookings_[0] = this.bookings.filter((item) => {
-        return item.status == "waiting" 
-      })
-      this.bookings_[1] = this.bookings.filter((item) => {
-        return item.status == "approve" 
-      })
-      this.bookings_[2] = this.bookings.filter((item) => {
-        return item.status == "denied" 
-      })
-        console.log(this.bookings_w)
+  created() {
+    this.setdata();
   },
-  mounted(){
-  }
+  mounted() {}
 };
 </script>
