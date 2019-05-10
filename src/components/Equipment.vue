@@ -12,7 +12,7 @@
     </v-card-title>
     <v-data-table :headers="headers" :items="equipments" class="elevation-1" :search="search">
       <template v-slot:items="props">
-        <td>{{ props.item.name }}</td>
+        <td>{{ props.item.equipmentName }}</td>
         <td class="text-xs-left">
           <v-btn color="info" :to="'/equipment/view/'+props.item._id">VIEW</v-btn>
           <v-btn color="success" :to="'/equipment/edit/'+props.item._id">EDIT</v-btn>
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -43,26 +44,22 @@ export default {
     };
   },
   methods: {
-    del(id) {}
+    async del(id) {
+      let result = await axios.post('/equipment/removeEquipment',{_id:id})
+      console.log(result)
+      if(result.data.code === 500){
+            alert(result.data.result)
+          }else{
+            let data = await axios.post('/equipment/getEquipment',{})
+            console.log(data)
+            this.equipments = data.data.result
+          }
+    }
   },
-  created() {
-    this.equipments = [
-      {
-        _id: "asd",
-        name: "Lecture Chair",
-        description: ""
-      },
-      {
-        _id: "asasdd",
-        name: "Computer",
-        description: ""
-      },
-      {
-        _id: "asqewd",
-        name: "Projecture",
-        description: ""
-      }
-    ];
+  async created() {
+    let data = await axios.post('/equipment/getEquipment',{})
+    console.log(data)
+    this.equipments = data.data.result
   }
 };
 </script>

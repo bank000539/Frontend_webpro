@@ -14,13 +14,14 @@
         <router-link to="/register">
         <v-btn color="primary">Register</v-btn></router-link>
 
-        <v-btn color="success">LOGIN</v-btn>
+        <v-btn color="success" @click="login">LOGIN</v-btn>
       </v-flex>
     </v-container>
   </v-form>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -31,8 +32,14 @@ export default {
     };
   },
   methods:{
-    login(){
-
+    async login(){
+      let result = await axios.post('auth/login',this.User)
+      console.log(result)
+      if(result.data.code === 500){
+        alert(result.data.result)
+      }else{
+        this.$router.push('/')
+      }
     }
   }
 };
