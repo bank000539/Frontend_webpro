@@ -5,7 +5,7 @@
         <v-subheader>FIRST NAME</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field v-model="User.firstname" :readonly="_readonly" label="FIRST NAME"></v-text-field>
+        <v-text-field v-model="User.firstName" :readonly="_readonly" label="FIRST NAME"></v-text-field>
       </v-flex>
     </v-layout>
     <v-layout row>
@@ -13,7 +13,7 @@
         <v-subheader>LAST NAME</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field v-model="User.lastname" :readonly="_readonly" label="LAST NAME"></v-text-field>
+        <v-text-field v-model="User.lastName" :readonly="_readonly" label="LAST NAME"></v-text-field>
       </v-flex>
     </v-layout>
     <v-layout row>
@@ -59,7 +59,7 @@
               <v-subheader>FIRST NAME</v-subheader>
             </v-flex>
             <v-flex xs7>
-              <v-text-field v-model="User.firstname" readonly></v-text-field>
+              <v-text-field v-model="User.firstName" readonly></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout wrap>
@@ -67,7 +67,7 @@
               <v-subheader>LAST NAME</v-subheader>
             </v-flex>
             <v-flex xs7>
-              <v-text-field v-model="User.lastname" readonly></v-text-field>
+              <v-text-field v-model="User.lastName" readonly></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout wrap>
@@ -113,8 +113,8 @@ export default {
     dialog: false,
     roles: ["admin", "support", "user"],
     User: {
-      firstname: "",
-      lastname: "",
+      firstName: "",
+      lastName: "",
       username: "",
       role: "user",
       password: "",
@@ -127,7 +127,7 @@ export default {
           console.log("Edit",this.$route.params.id)
           this.User._id = this.$route.params.id
           var temp = this.User
-          this.User.data = {firstname:this.User.firstname,lastname:this.User.lastname,username:this.User.username,role:this.User.role,password:this.User.password,available:this.User.available}
+          this.User.data = {firstName:this.User.firstName,lastName:this.User.lastName,username:this.User.username,role:this.User.role,password:this.User.password,available:this.User.available}
         console.log(this.User)
       let result = await axios.post('/auth/editUser',this.User)
           console.log(result)

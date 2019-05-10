@@ -102,7 +102,6 @@ export default {
       } else {
         this.dialog = false;
         this.del_id = "";
-
         this.setdata();
       }
     },

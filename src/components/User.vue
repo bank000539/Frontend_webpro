@@ -11,8 +11,8 @@
     </v-card-title>
     <v-data-table :headers="headers" :items="users" class="elevation-1" :search="search">
       <template v-slot:items="props">
-        <td>{{ props.item.firstname }}</td>
-        <td>{{ props.item.lastname }}</td>
+        <td>{{ props.item.firstName }}</td>
+        <td>{{ props.item.lastName }}</td>
         <td>{{ props.item.username }}</td>
         <td style="text-transform: uppercase;">{{ props.item.role }}</td>
         <td style="text-transform: uppercase;">{{ props.item.available }}</td>
