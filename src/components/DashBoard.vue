@@ -15,8 +15,10 @@
         <td>{{ props.item.time }}</td>
         <td>{{ props.item.subject }}</td>
         <td>{{ props.item.status }}</td>
-        <td class="text-xs-right">
-          <v-btn color="success" v-bind:to="'/dashboard/edit'">EDIT</v-btn>
+        <td class="text-xs-left">
+          <v-btn color="info" v-bind:to="'/booking/view/'+props.item._id">VIEW</v-btn>
+          <v-btn color="success" v-bind:to="'/booking/edit/'+props.item._id">EDIT</v-btn>
+          <v-btn color="error" >DELETE</v-btn>
         </td>
       </template>
       <template v-slot:no-results>
@@ -41,14 +43,15 @@ export default {
           align: "left",
           value: "date"
         },
-        { text: "ROOM", sortable: false, value: "room" },
-        { text: "TIME", sortable: false, value: "time" },
-        { text: "SUBJECT", sortable: false, value: "subject" },
-        { text: "STATUS", sortable: false, value: "status" },
-        { text: "", sortable: false, value: "" }
+        { text: "ROOM", sortable: true, value: "room" },
+        { text: "TIME", sortable: true, value: "time" },
+        { text: "SUBJECT", sortable: true, value: "subject" },
+        { text: "STATUS", sortable: true, value: "status" },
+        { text: "ACTION", sortable: false, value: "" }
       ],
       bookings: [
         {
+          _id:"a1sdf",
           date: "01/05/2019",
           room: "ROOM1",
           time: "12:00 - 15:00",
@@ -56,6 +59,7 @@ export default {
           status: "WAITING"
         },
         {
+          _id:"a1sdf2",
           date: "02/05/2019",
           room: "ROOM2",
           time: "12:00 - 15:00",
@@ -63,6 +67,7 @@ export default {
           status: "WAITING"
         },
         {
+          _id:"a1s3df",
           date: "03/05/2019",
           room: "ROOM3",
           time: "12:00 - 15:00",
@@ -70,6 +75,7 @@ export default {
           status: "WAITING"
         },
         {
+          _id:"a1sd4f",
           date: "04/05/2019",
           room: "ROOM4",
           time: "12:00 - 15:00",
@@ -77,6 +83,7 @@ export default {
           status: "WAITING"
         },
         {
+          _id:"a1s5df",
           date: "05/05/2019",
           room: "ROOM5",
           time: "12:00 - 15:00",

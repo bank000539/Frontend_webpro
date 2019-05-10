@@ -6,7 +6,7 @@
         <v-subheader>EQUIPMENT NAME</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="EQUIPMENT NAME"></v-text-field>
+        <v-text-field label="EQUIPMENT NAME" v-model="Equipment.name" :readonly="_readonly"></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -15,14 +15,16 @@
         <v-subheader>DESCRIPTION</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-textarea name="input-7-1" label="Description" value="EXAMPLE DESCRIPTION"></v-textarea>
+        <v-textarea name="input-7-1" label="DESCRIPTION" v-model="Equipment.description" :readonly="_readonly"></v-textarea>
       </v-flex>
     </v-layout>
 
     <v-layout row justify-center>
       <v-dialog v-model="dialog" persistent max-width="800">
         <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark v-on="on">ADD</v-btn>
+          <v-btn v-if="_readonly==true" color="primary" dark :to="'/equipment'" >CLOSE</v-btn>
+          <v-btn v-if="_readonly==false" color="error" dark :to="'/equipment'">CANCEL</v-btn>
+          <v-btn v-if="_readonly==false" color="primary" dark v-on="on">SAVE</v-btn>
         </template>
         <v-card>
           <v-card-title class="headline">CONFIRM?</v-card-title>
@@ -32,7 +34,7 @@
               <v-subheader>EQUIPMENT NAME</v-subheader>
             </v-flex>
             <v-flex xs7>
-              <v-text-field value="XXXXXXXXXXXXXXXXXXXXX" readonly></v-text-field>
+              <v-text-field v-model="Equipment.name" readonly></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout wrap>
@@ -40,13 +42,13 @@
               <v-subheader>DESCRIPTION</v-subheader>
             </v-flex>
             <v-flex xs7>
-              <v-textarea value="XXXXXXXXXXXXXXXXXXXXX" readonly></v-textarea>
+              <v-textarea v-model="Equipment.description" readonly></v-textarea>
             </v-flex>
           </v-layout>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="success" @click="dialog = false">BACK</v-btn>
-            <v-btn color="success" @click="dialog = false">CONFIRM</v-btn>
+            <v-btn color="success" @click="save">CONFIRM</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -59,8 +61,44 @@ export default {
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
     menu: false,
-    items: ["ROOM1", "ROOM2", "ROOM3", "ROOM4"],
+    _readonly: false,
+    Equipment:{
+      name:"",
+      description:""
+    },
     dialog: false
-  })
+  }),
+  methods:{
+      save(){
+        if(this.$route.params.title == "edit"){
+          console.log("Edit",this.$route.params.id)
+      console.log(this.Equipment)
+        }
+        else{
+          console.log("Add")
+      console.log(this.Equipment)
+        }
+        this.dialog = false
+      },
+      setdata(){
+        this.Equipment={
+        name:"Test",
+        description:"Test naja"
+        }
+      }
+  },
+  created(){
+    if(this.$route.params.title == "view"){
+      this._readonly = true
+      this.setdata()
+    }
+    else if(this.$route.params.title == "add"){
+      this._readonly = false
+    }
+    else{
+      this._readonly = false
+      this.setdata()
+    }
+  }
 };
 </script>

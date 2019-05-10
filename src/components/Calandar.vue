@@ -11,7 +11,7 @@
       </ul>
     </v-flex>
     <v-flex class="button text-xs-center">
-        <v-btn color="success" v-bind:to="'/booking'">BOOKING</v-btn>
+        <v-btn color="success" v-bind:to="'/booking/add/0'">BOOKING</v-btn>
       </v-flex>
   </v-layout>
 </template>
