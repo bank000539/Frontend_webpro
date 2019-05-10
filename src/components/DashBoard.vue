@@ -30,7 +30,8 @@
             <template v-slot:items="props">
               <td>{{ props.item.date }}</td>
               <td>{{ props.item.room.name }}</td>
-              <td>{{ props.item.time }}</td>
+              <td>{{ props.item.start_time }}</td>
+              <td>{{ props.item.end_time }}</td>
               <td style="text-transform: uppercase;">{{ props.item.subject }}</td>
               <td style="text-transform: uppercase;">{{ props.item.status }}</td>
               <td style="text-transform: uppercase;">{{ props.item.checkout }}</td>
@@ -68,7 +69,8 @@ export default {
           value: "date"
         },
         { text: "ROOM", sortable: true, value: "room" },
-        { text: "TIME", sortable: true, value: "time" },
+        { text: "START TIME", sortable: true, value: "start_time" },
+        { text: "END TIME", sortable: true, value: "end_time" },
         { text: "SUBJECT", sortable: true, value: "subject" },
         { text: "STATUS", sortable: true, value: "status" },
         { text: "CHECKOUT", sortable: true, value: "checkout" },
@@ -87,7 +89,8 @@ active: null,
         {
           _id: "asdf1",
           date: "01/05/2019",
-          time: "12:30:00",
+          start_time: "09:30:00",
+          end_time: "12:30:00",
           subject: "Test",
           status: "waiting",
           checkout: false,
@@ -157,7 +160,8 @@ active: null,
         {
           _id: "a1sdf2",
           date: "02/05/2019",
-          time: "12:30:00",
+          start_time: "09:30:00",
+          end_time: "12:30:00",
           subject: "Test",
           status: "waiting",
           checkout: false,
@@ -227,7 +231,8 @@ active: null,
         {
           _id: "a1s3df",
           date: "03/05/2019",
-          time: "12:30:00",
+          start_time: "09:30:00",
+          end_time: "12:30:00",
           subject: "Test",
           status: "waiting",
           checkout: false,
@@ -297,7 +302,8 @@ active: null,
         {
           _id: "a1sd4f",
           date: "04/05/2019",
-          time: "12:30:00",
+          start_time: "09:30:00",
+          end_time: "12:30:00",
           subject: "Test",
           status: "denied",
           checkout: false,
@@ -367,7 +373,8 @@ active: null,
         {
           _id: "a1s5df",
           date: "05/05/2019",
-          time: "12:30:00",
+          start_time: "09:30:00",
+          end_time: "12:30:00",
           subject: "Test",
           status: "approve",
           checkout: false,
