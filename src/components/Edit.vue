@@ -31,10 +31,19 @@
 
     <v-layout row>
       <v-flex xs3 offset-xs1>
-        <v-subheader>TIME</v-subheader>
+        <v-subheader>START TIME</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Time" value="12:30:00" type="time"></v-text-field>
+        <v-text-field value="XX/XX" readonly></v-text-field>
+      </v-flex>
+    </v-layout>
+
+    <v-layout row>
+      <v-flex xs3 offset-xs1>
+        <v-subheader>END TIME</v-subheader>
+      </v-flex>
+      <v-flex xs7>
+        <v-text-field value="XX/XX" readonly></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -68,7 +77,7 @@
     <v-layout row justify-center>
       <v-dialog v-model="dialog" persistent max-width="800">
         <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark v-on="on">BOOKING</v-btn>
+          <v-btn color="primary" dark v-on="on">EDIT</v-btn>
         </template>
         <v-card>
           <v-card-title class="headline">CONFIRM?</v-card-title>
@@ -82,7 +91,15 @@
           </v-layout>
           <v-layout wrap>
             <v-flex xs3 offset-xs1>
-              <v-subheader>TIME</v-subheader>
+              <v-subheader>START TIME</v-subheader>
+            </v-flex>
+            <v-flex xs7>
+              <v-text-field value="XX/XX" readonly></v-text-field>
+            </v-flex>
+          </v-layout>
+          <v-layout wrap>
+            <v-flex xs3 offset-xs1>
+              <v-subheader>END TIME</v-subheader>
             </v-flex>
             <v-flex xs7>
               <v-text-field value="XX/XX" readonly></v-text-field>
