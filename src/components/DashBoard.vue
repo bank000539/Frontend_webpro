@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -77,372 +78,27 @@ export default {
         { text: "ACTION", sortable: false, value: "" }
       ],
       bookings: [],
-active: null,
+      active: null,
       bookings_: [[],[],[]]
     };
   },
   methods: {
     del(id) {}
   },
-  created() {
-    this.bookings= [
-        {
-          _id: "asdf1",
-          date: "01/05/2019",
-          start_time: "09:30:00",
-          end_time: "12:30:00",
-          subject: "Test",
-          status: "waiting",
-          checkout: false,
-          room: {
-            name: "6275",
-            equipments: [
-              {
-                _id: "asasdd",
-                name: "Computer",
-                description: "",
-                amount: 2,
-                defaultcheck: true,
-                divider: true,
-                inset: true
-              },
-              {
-                _id: "asd",
-                name: "Lecture Chair",
-                description: "",
-                amount: 40,
-                defaultcheck: true,
-                divider: true,
-                inset: true
-              },
-              {
-                _id: "asqewd",
-                name: "Projecture",
-                description: "",
-                amount: 1,
-                defaultcheck: false,
-                divider: true,
-                inset: true
-              }
-            ],
-            support: {
-              _id: "asd3",
-              firstname: "Meaw3",
-              lastname: "Min2",
-              email: "test@mail.com",
-              role: "support",
-              available: true
-            },
-            description: "Lecture Room"
-          },
-          description: "Test naja",
-          equipments: [
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 2,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 1,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            }
-          ]
-        },
-        {
-          _id: "a1sdf2",
-          date: "02/05/2019",
-          start_time: "09:30:00",
-          end_time: "12:30:00",
-          subject: "Test",
-          status: "waiting",
-          checkout: false,
-          room: {
-            name: "6275",
-            equipments: [
-              {
-                _id: "asasdd",
-                name: "Computer",
-                description: "",
-                amount: 2,
-                defaultcheck: true,
-                divider: true,
-                inset: true
-              },
-              {
-                _id: "asd",
-                name: "Lecture Chair",
-                description: "",
-                amount: 40,
-                defaultcheck: true,
-                divider: true,
-                inset: true
-              },
-              {
-                _id: "asqewd",
-                name: "Projecture",
-                description: "",
-                amount: 1,
-                defaultcheck: false,
-                divider: true,
-                inset: true
-              }
-            ],
-            support: {
-              _id: "asd3",
-              firstname: "Meaw3",
-              lastname: "Min2",
-              email: "test@mail.com",
-              role: "support",
-              available: true
-            },
-            description: "Lecture Room"
-          },
-          description: "Test naja",
-          equipments: [
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 2,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 1,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            }
-          ]
-        },
-        {
-          _id: "a1s3df",
-          date: "03/05/2019",
-          start_time: "09:30:00",
-          end_time: "12:30:00",
-          subject: "Test",
-          status: "waiting",
-          checkout: false,
-          room: {
-            name: "6275",
-            equipments: [
-              {
-                _id: "asasdd",
-                name: "Computer",
-                description: "",
-                amount: 2,
-                defaultcheck: true,
-                divider: true,
-                inset: true
-              },
-              {
-                _id: "asd",
-                name: "Lecture Chair",
-                description: "",
-                amount: 40,
-                defaultcheck: true,
-                divider: true,
-                inset: true
-              },
-              {
-                _id: "asqewd",
-                name: "Projecture",
-                description: "",
-                amount: 1,
-                defaultcheck: false,
-                divider: true,
-                inset: true
-              }
-            ],
-            support: {
-              _id: "asd3",
-              firstname: "Meaw3",
-              lastname: "Min2",
-              email: "test@mail.com",
-              role: "support",
-              available: true
-            },
-            description: "Lecture Room"
-          },
-          description: "Test naja",
-          equipments: [
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 2,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 1,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            }
-          ]
-        },
-        {
-          _id: "a1sd4f",
-          date: "04/05/2019",
-          start_time: "09:30:00",
-          end_time: "12:30:00",
-          subject: "Test",
-          status: "denied",
-          checkout: false,
-          room: {
-            name: "6275",
-            equipments: [
-              {
-                _id: "asasdd",
-                name: "Computer",
-                description: "",
-                amount: 2,
-                defaultcheck: true,
-                divider: true,
-                inset: true
-              },
-              {
-                _id: "asd",
-                name: "Lecture Chair",
-                description: "",
-                amount: 40,
-                defaultcheck: true,
-                divider: true,
-                inset: true
-              },
-              {
-                _id: "asqewd",
-                name: "Projecture",
-                description: "",
-                amount: 1,
-                defaultcheck: false,
-                divider: true,
-                inset: true
-              }
-            ],
-            support: {
-              _id: "asd3",
-              firstname: "Meaw3",
-              lastname: "Min2",
-              email: "test@mail.com",
-              role: "support",
-              available: true
-            },
-            description: "Lecture Room"
-          },
-          description: "Test naja",
-          equipments: [
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 2,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 1,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            }
-          ]
-        },
-        {
-          _id: "a1s5df",
-          date: "05/05/2019",
-          start_time: "09:30:00",
-          end_time: "12:30:00",
-          subject: "Test",
-          status: "approve",
-          checkout: false,
-          room: {
-            name: "6275",
-            equipments: [
-              {
-                _id: "asasdd",
-                name: "Computer",
-                description: "",
-                amount: 2,
-                defaultcheck: true,
-                divider: true,
-                inset: true
-              },
-              {
-                _id: "asd",
-                name: "Lecture Chair",
-                description: "",
-                amount: 40,
-                defaultcheck: true,
-                divider: true,
-                inset: true
-              },
-              {
-                _id: "asqewd",
-                name: "Projecture",
-                description: "",
-                amount: 1,
-                defaultcheck: false,
-                divider: true,
-                inset: true
-              }
-            ],
-            support: {
-              _id: "asd3",
-              firstname: "Meaw3",
-              lastname: "Min2",
-              email: "test@mail.com",
-              role: "support",
-              available: true
-            },
-            description: "Lecture Room"
-          },
-          description: "Test naja",
-          equipments: [
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 2,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 1,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            }
-          ]
-        }
-      ]
-  
+  async created() {
+    let result = await axios.post('/room/getBooking',{})
+    console.log(result.data.result)
+    this.bookings = result.data.result.map(el=>{
+      let time = new Date(el.start)
+      el.room = {name:el.roomName}
+      el.date = time.getFullYear()+"-"+time.getMonth()+"-"+time.getDate()
+      el.start_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")
+      time = new Date(el.end)
+      el.end_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")
+      return el
+    })
+    console.log(this.bookings)
+    this.bookings_=[]
     this.bookings_[0] = this.bookings.filter((item) => {
         return item.status == "waiting" 
       })
@@ -452,7 +108,6 @@ active: null,
       this.bookings_[2] = this.bookings.filter((item) => {
         return item.status == "denied" 
       })
-  
         console.log(this.bookings_w)
   },
   mounted(){

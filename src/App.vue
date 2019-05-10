@@ -2,36 +2,12 @@
   <v-app id="inspire">
     <v-navigation-drawer fixed v-model="drawer" app>
       <v-list dense>
-        <router-link v-bind:to="{ name: 'Login' }" class="side_bar_link">
-          <v-list-tile>
-            <v-list-tile-action>
-              <v-icon>person</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>LOGIN</v-list-tile-content>
-          </v-list-tile>
-        </router-link>
-        <router-link v-bind:to="{ name: 'Contact' }" class="side_bar_link">
-          <v-list-tile>
-            <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>LOGOUT</v-list-tile-content>
-          </v-list-tile>
-        </router-link>
         <router-link v-bind:to="{ name: 'Calandar' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
               <v-icon>calendar_today</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>CALANDAR</v-list-tile-content>
-          </v-list-tile>
-        </router-link>
-        <router-link v-bind:to="{ name: 'Booking' }" class="side_bar_link">
-          <v-list-tile>
-            <v-list-tile-action>
-              <v-icon>book</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>BOOKING</v-list-tile-content>
           </v-list-tile>
         </router-link>
         <router-link v-bind:to="{ name: 'DashBoard' }" class="side_bar_link">
@@ -73,7 +49,8 @@
       <v-toolbar-title>Booking Computer Engineering Room</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat v-bind:to="{ name: 'Login' }">LOGIN</v-btn>
+        <v-btn v-if="isLogin===false" flat v-bind:to="{ name: 'Login' }">LOGIN</v-btn>
+        <v-btn v-if="isLogin===true" flat @click="logout">LOGOUT</v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
@@ -91,12 +68,44 @@
 
 <script>
 import "./assets/stylesheets/main.css";
+import axios from "axios";
 export default {
   data: () => ({
-    drawer: null
+    drawer: null,
+    isLogin: false
   }),
   props: {
     source: String
+  },
+  created() {
+    this.checkIfIsLogIn();
+  },
+  updated() {
+    this.checkIfIsLogIn();
+  },
+  methods: {
+    async logout() {
+      let result = await axios.post("auth/logout", this.User);
+      console.log(result);
+      if (result.data.code === 500) {
+        alert(result.data.result);
+      } else {
+        this.$router.push("/");
+      }
+    },
+    async checkIfIsLogIn() {
+      let result = await axios.post("auth/checkLogin", this.User);
+      console.log(result);
+      if (result.data.code === 500) {
+        alert(result.data.result);
+      } else {
+        if (result.data.result != null) {
+          this.isLogin = true;
+        } else {
+          this.isLogin = false;
+        }
+      }
+    }
   }
 };
 </script>

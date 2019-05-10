@@ -1,11 +1,11 @@
-<template>
+<template >
   <v-container fluid>
     <v-layout row>
       <v-flex xs3 offset-xs1>
         <v-subheader>First Name</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Firstname" v-model="Book.user.firstname" :readonly="_readonly"></v-text-field>
+        <v-text-field label="Firstname" v-model="Book.user.firstname" readonly></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -14,7 +14,7 @@
         <v-subheader>Last Name</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Lastname" v-model="Book.user.lastname" :readonly="_readonly"></v-text-field>
+        <v-text-field label="Lastname" v-model="Book.user.lastname" readonly></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -37,7 +37,7 @@
           min-width="290px"
         >
           <template v-slot:activator="{ on }">
-            <v-text-field v-model="Book.date" :readonly="_readonly" label="Date" readonly v-on="on"></v-text-field>
+            <v-text-field v-model="Book.date" :readonly="_readonly" label="Date" v-on="on"></v-text-field>
           </template>
           <v-date-picker v-model="Book.date" :readonly="_readonly" no-title scrollable>
             <v-spacer></v-spacer>
@@ -169,6 +169,7 @@
       <v-dialog v-model="dialog" persistent max-width="800">
         <template v-slot:activator="{ on }">
           <v-btn v-if="_readonly==true" color="primary" dark :to="'/dashboard'">CLOSE</v-btn>
+          <v-btn v-if="_readonly==true" color="info" dark @click="download">Download PDF</v-btn>
           <v-btn v-if="_readonly==false" color="error" dark :to="'/dashboard'">CANCEL</v-btn>
           <v-btn v-if="_readonly==false" color="primary" dark v-on="on">SAVE</v-btn>
         </template>
@@ -268,6 +269,8 @@
 </template>
 
 <script>
+import jsPDF from "jspdf";
+import axios from 'axios'
 export default {
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
@@ -309,158 +312,57 @@ export default {
     }
   },
   methods: {
-    save() {
+    async save() {
       if (this.$route.params.title == "edit") {
         console.log("Edit", this.$route.params.id, this.Room);
       } else {
         console.log("Add", this.Book);
+        let bookData = this.Book
+        let dateTime =  bookData.date.split("-");
+        let day = new Date(parseInt(dateTime[0]),parseInt(dateTime[1]),parseInt(dateTime[2]))
+        day.setHours(parseInt(bookData.start_time.split(":")[0]))
+        day.setMinutes(parseInt(bookData.start_time.split(":")[1]))
+        bookData.start= day.getTime()
+        day.setHours(parseInt(bookData.end_time.split(":")[0]))
+        day.setMinutes(parseInt(bookData.end_time.split(":")[1]))
+        bookData.end= day.getTime()
+        bookData.roomName = bookData.room.roomName
+        console.log(bookData)
+        let result = await axios.post('/room/bookingRoom',bookData)
+        if(result.data.code === 500){
+          if(typeof(result.data.result)===typeof("")){
+            alert(result.data.result)
+          }else{
+            alert("booking overlap "+new Date(result.data.result.start).toString() +" - " + new Date(result.data.result.end).toString() )
+          }
+        }
       }
       this.dialog = false;
     },
-    getdata() {
-      this.rooms = [
-        {
-          name: "6275",
-          equipments: [
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 2,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asd",
-              name: "Lecture Chair",
-              description: "",
-              amount: 40,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 1,
-              defaultcheck: false,
-              divider: true,
-              inset: true
-            }
-          ],
-          support: {
-            _id: "asd3",
-            firstname: "Meaw3",
-            lastname: "Min2",
-            email: "test@mail.com",
-            role: "support",
-            available: true
-          },
-          description: "Lecture Room"
-        },
-        {
-          name: "6273",
-          equipments: [
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 41,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asd",
-              name: "Lecture Chair",
-              description: "",
-              amount: 40,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 1,
-              defaultcheck: false,
-              divider: true,
-              inset: true
-            }
-          ],
-          support: {
-            _id: "asd3",
-            firstname: "Meaw3",
-            lastname: "Min2",
-            email: "test@mail.com",
-            role: "support",
-            available: true
-          },
-          description: "Lab Room"
-        },
-        {
-          name: "6276",
-          equipments: [
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 2,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asd",
-              name: "Lecture Chair",
-              description: "",
-              amount: 40,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 1,
-              defaultcheck: false,
-              divider: true,
-              inset: true
-            }
-          ],
-          support: {
-            _id: "asd3",
-            firstname: "Meaw3",
-            lastname: "Min2",
-            email: "test@mail.com",
-            role: "support",
-            available: true
-          },
-          description: "Lecture Room"
-        }
-      ];
-
-      this.equipments = [
-        {
-          _id: "asd",
-          name: "Lecture Chair",
-          description: ""
-        },
-        {
-          _id: "asasdd",
-          name: "Computer",
-          description: ""
-        },
-        {
-          _id: "asqewd",
-          name: "Projecture",
-          description: ""
-        }
-      ];
+    async getdata() {
+      let result = await axios.post('/room/getRoom',{})
+      console.log(result)
+      this.rooms = result.data.result.map(el=>{el.name = el.roomName;return el})
+      let data = await axios.post('/equipment/getEquipment',{})
+      console.log(data)
+      this.equipments = data.data.result.map(el=>{el.name = el.equipmentName;return el})
+      // this.equipments = [
+      //   {
+      //     _id: "asd",
+      //     name: "Lecture Chair",
+      //     description: ""
+      //   },
+      //   {
+      //     _id: "asasdd",
+      //     name: "Computer",
+      //     description: ""
+      //   },
+      //   {
+      //     _id: "asqewd",
+      //     name: "Projecture",
+      //     description: ""
+      //   }
+      // ];
     },
     updateequip() {
       // this.equipments = this.Book.room.equipments
@@ -548,6 +450,126 @@ export default {
           }
         ]
       };
+    },
+    download() {
+      var doc = new jsPDF();
+      doc.setFontSize(25);
+      doc.setFont("tahoma");
+      doc.setFontType("bold");
+      doc.text(30, 40, "Booking Computer Engineering Room");
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 70, "Name:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(
+        80,
+        70,
+        this.Book.user.firstname + " " + this.Book.user.lastname
+      );
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 80, "Date:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 80, this.Book.date);
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 90, "From time:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 90, this.Book.start_time);
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(120, 90, "To:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(160, 90, this.Book.end_time);
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 100, "Room:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 100, this.Book.room.name);
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 110, "Subject:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 110, this.Book.subject);
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 120, "Status:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 120, this.Book.status);
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 130, "Checkout:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 130, this.Book.checkout.toString());
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 140, "Equipments:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      var verticalOffset = 150;
+      for (var i = 0; i < this.Book.equipments.length; i++) {
+        // console.log(this.Book.equipments[i]);
+        doc.text(40, verticalOffset, this.Book.equipments[i].name);
+        doc.setFontSize(20);
+        doc.setFontType("bold");
+        doc.text(120, verticalOffset, "Amount:");
+        doc.setFontSize(18);
+        doc.setFontType("normal");
+        doc.text(
+          160,
+          verticalOffset,
+          this.Book.equipments[i].amount.toString()
+        );
+        verticalOffset += 10;
+      }
+      // var loremipsum =
+      //   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus id eros turpis. Vivamus tempor urna vitae sapien mollis molestie. Vestibulum in lectus non enim bibendum laoreet at at libero. Etiam malesuada erat sed sem blandit in varius orci porttitor. Sed at sapien urna. Fusce augue ipsum, molestie et adipiscing at, varius quis enim. Morbi sed magna est, vel vestibulum urna. Sed tempor ipsum vel mi pretium at elementum urna tempor. Nulla faucibus consectetur felis, elementum venenatis mi mollis gravida. Aliquam mi ante, accumsan eu tempus vitae, viverra quis justo.\n\nProin feugiat augue in augue rhoncus eu cursus tellus laoreet. Pellentesque eu sapien at diam porttitor venenatis nec vitae velit. Donec ultrices volutpat lectus eget vehicula. Nam eu erat mi, in pulvinar eros. Mauris viverra porta orci, et vehicula lectus sagittis id. Nullam at magna vitae nunc fringilla posuere. Duis volutpat malesuada ornare. Nulla in eros metus. Vivamus a posuere libero.";
+      var loremipsum = this.Book.description;
+      var lines = doc.splitTextToSize(loremipsum, 120);
+      // console.log(lines);
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, verticalOffset, "Description:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      var linepage = lines;
+      if (lines.length >= 14) {
+        lines = linepage.splice(0, 14);
+        doc.text(80, verticalOffset + 18 / 72, lines);
+        if (linepage.length >= 0) {
+          doc.addPage();
+
+          doc.setFontSize(25);
+          doc.setFont("tahoma");
+          doc.setFontType("bold");
+          doc.text(30, 40, "Booking Computer Engineering Room");
+          verticalOffset = 70;
+
+          doc.setFontSize(18);
+          doc.setFontType("normal");
+          doc.text(80, verticalOffset + 18 / 72, lines);
+        }
+      } else {
+        doc.text(80, verticalOffset + 18 / 72, lines);
+      }
+
+      doc.save("Booking.pdf");
     }
   }
 };
