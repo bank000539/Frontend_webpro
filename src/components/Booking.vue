@@ -338,6 +338,8 @@ export default {
           }else{
             alert("booking overlap "+new Date(result.data.result.start).toString() +" - " + new Date(result.data.result.end).toString() )
           }
+        }else{
+          this.$router.push('/')
         }
       }
       this.dialog = false;
@@ -384,11 +386,12 @@ export default {
       this.Book.start_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")
       time = new Date(bookData.end)
       this.Book.end_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")
-      this.Book.user = {}
+      this.Book.user = bookData.user
       this.Book.room = bookData.roomName
       let temp = this.Book
       this.Book = {}
       this.Book = temp
+
  
     },
     download() {
