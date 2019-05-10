@@ -5,7 +5,7 @@
         <v-subheader>FIRST NAME</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field v-model="User.firstname" label="FIRST NAME"></v-text-field>
+        <v-text-field v-model="User.firstname" :readonly="_readonly" label="FIRST NAME"></v-text-field>
       </v-flex>
     </v-layout>
     <v-layout row>
@@ -13,7 +13,7 @@
         <v-subheader>LAST NAME</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field v-model="User.lastname" label="LAST NAME"></v-text-field>
+        <v-text-field v-model="User.lastname" :readonly="_readonly" label="LAST NAME"></v-text-field>
       </v-flex>
     </v-layout>
     <v-layout row>
@@ -21,7 +21,7 @@
         <v-subheader>EMAIL</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field type="email" v-model="User.username" label="EMAIL"></v-text-field>
+        <v-text-field type="email" v-model="User.username" :readonly="_readonly" label="EMAIL"></v-text-field>
       </v-flex>
     </v-layout>
     <v-layout row>
@@ -29,7 +29,7 @@
         <v-subheader>ROLE</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-select :items="roles" v-model="User.role" label="ROLE" style="text-transform: uppercase;"></v-select>
+        <v-select :items="roles" v-model="User.role" :readonly="_readonly" label="ROLE" style="text-transform: uppercase;"></v-select>
       </v-flex>
     </v-layout>
 
@@ -38,7 +38,7 @@
         <v-subheader>AVAILABLE</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-switch v-model="User.available" :label="User.available.toString()" color="success"></v-switch>
+        <v-switch v-model="User.available" :readonly="_readonly" :label="User.available.toString()" color="success"></v-switch>
       </v-flex>
     </v-layout>
     <br>

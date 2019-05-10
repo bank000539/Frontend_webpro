@@ -58,7 +58,7 @@
               <v-subheader>FIRST NAME</v-subheader>
             </v-flex>
             <v-flex xs7>
-              <v-text-field value="XXXXXXXXXXXXXXXXXXXXX" readonly></v-text-field>
+              <v-text-field v-model="User.firstname" readonly></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout wrap>
@@ -66,7 +66,7 @@
               <v-subheader>LAST NAME</v-subheader>
             </v-flex>
             <v-flex xs7>
-              <v-text-field value="XXXXXXXXXXXXXXXXXXXXX" readonly></v-text-field>
+              <v-text-field v-model="User.lastname" readonly></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout wrap>
@@ -74,7 +74,7 @@
               <v-subheader>EMAIL</v-subheader>
             </v-flex>
             <v-flex xs7>
-              <v-text-field value="XXXXXXXXXXXXXXXXXXXXX" readonly></v-text-field>
+              <v-text-field v-model="User.email" readonly></v-text-field>
             </v-flex>
           </v-layout>
           <v-card-actions>
@@ -89,6 +89,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data: () => ({
     items: ["ROOM1", "ROOM2", "ROOM3", "ROOM4"],
@@ -98,6 +99,7 @@ export default {
       firstname:"",
       lastname:"",
       email:"",
+      username:"",
       role:"user",
       password:"",
       available: true
@@ -114,7 +116,15 @@ export default {
         this.dialog = true
       }
     },
-    save(){
+    async save(){
+      this.User.username = this.User.email
+      let result = await axios.post("auth/register", this.User);
+      console.log(result);
+      if (result.data.code === 500) {
+        alert(result.data.result);
+      } else {
+        this.$router.push("/login");
+      }
     }
   }
 };

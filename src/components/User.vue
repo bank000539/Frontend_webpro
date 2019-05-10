@@ -19,7 +19,7 @@
         <td class="text-xs-left">
           <v-btn color="info" :to="'/user/view/'+props.item._id">VIEW</v-btn>
           <v-btn color="success" :to="'/user/edit/'+props.item._id">EDIT</v-btn>
-          <v-btn color="error" @click="confirm(props.item._id)">DELETE</v-btn>
+          <v-btn color="error" @click="confirm(props.item.username)">DELETE</v-btn>
         </td>
       </template>
       <template v-slot:no-results>
@@ -73,7 +73,7 @@ export default {
       this.del_id = id
     },
     async del(id) {
-      let result = await axios.post('/auth/removeUser',{_id:id})
+      let result = await axios.post('/auth/removeUser',{username:id})
       console.log(result)
       if(result.data.code === 500){
             alert(result.data.result)
