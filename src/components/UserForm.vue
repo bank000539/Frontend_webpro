@@ -21,7 +21,7 @@
         <v-subheader>EMAIL</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field type="email" v-model="User.email" label="EMAIL"></v-text-field>
+        <v-text-field type="email" v-model="User.username" label="EMAIL"></v-text-field>
       </v-flex>
     </v-layout>
     <v-layout row>
@@ -75,7 +75,7 @@
               <v-subheader>EMAIL</v-subheader>
             </v-flex>
             <v-flex xs7>
-              <v-text-field v-model="User.email" readonly></v-text-field>
+              <v-text-field v-model="User.username" readonly></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout wrap>
@@ -106,6 +106,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data: () => ({
     items: ["ROOM1", "ROOM2", "ROOM3", "ROOM4"],
@@ -114,17 +115,27 @@ export default {
     User: {
       firstname: "",
       lastname: "",
-      email: "",
+      username: "",
       role: "user",
       password: "",
       available: true
     }
   }),
   methods: {
-      save(){
+      async save(){
         if(this.$route.params.title == "edit"){
           console.log("Edit",this.$route.params.id)
-      console.log(this.User)
+          this.User._id = this.$route.params.id
+          var temp = this.User
+          this.User.data = {firstname:this.User.firstname,lastname:this.User.lastname,username:this.User.username,role:this.User.role,password:this.User.password,available:this.User.available}
+        console.log(this.User)
+      let result = await axios.post('/auth/editUser',this.User)
+          console.log(result)
+          if(result.data.code === 500){
+            alert(result.data.result)
+          }else{
+            this.$router.push('/user')
+          }
         }
         else{
           console.log("Add")
@@ -132,16 +143,12 @@ export default {
         }
         this.dialog = false
       },
-    setdata() {
-      this.User = {
-        firstname: "Meaw",
-        lastname: "Meaw",
-        email: "m@m.co",
-        role: "user",
-        password: "1234",
-        available: true
-      };
-    }
+    async setdata(){
+        let data = await axios.post('/auth/getUser',{})
+        let id = this.$route.params.id
+        let findData = data.data.result.find(el=>el._id===id)
+        this.User=findData
+      }
   },
   created() {
     if (this.$route.params.title == "view") {

@@ -13,7 +13,7 @@
       <template v-slot:items="props">
         <td>{{ props.item.firstname }}</td>
         <td>{{ props.item.lastname }}</td>
-        <td>{{ props.item.email }}</td>
+        <td>{{ props.item.username }}</td>
         <td style="text-transform: uppercase;">{{ props.item.role }}</td>
         <td style="text-transform: uppercase;">{{ props.item.available }}</td>
         <td class="text-xs-left">
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -41,7 +42,7 @@ export default {
       headers: [
         { text: "FIRST NAME", sortable: true, value: "firstname" },
         { text: "LAST NAME", sortable: true, value: "lastname" },
-        { text: "EMAIL", sortable: true, value: "email" },
+        { text: "EMAIL", sortable: true, value: "username" },
         { text: "ROLE", sortable: true, value: "role" },
         { text: "AVAILABLE", sortable: true, value: "available" },
         { text: "ACTION", sortable: false, value: "" }
@@ -50,47 +51,22 @@ export default {
     };
   },
   methods: {
-    del(id) {}
+    async del(id) {
+      let result = await axios.post('/auth/removeUser',{_id:id})
+      console.log(result)
+      if(result.data.code === 500){
+            alert(result.data.result)
+          }else{
+            let data = await axios.post('/auth/getUser',{})
+            console.log(data)
+            this.users = data.data.result
+          }
+    }
   },
-  created() {
-    this.users = [
-      {
-        _id: "asd",
-        firstname: "Meaw1",
-        lastname: "Meaw",
-        email: "m@m.co",
-        role: "user",
-        password: "1234",
-        available: true
-      },
-      {
-       _id: "as9sd",
-        firstname: "Meaw2",
-        lastname: "Meaw",
-        email: "m@m.co",
-        role: "support",
-        password: "1234",
-        available: true
-      },
-      {
-        _id: "assa4fdd",
-        firstname: "Meaw3",
-        lastname: "Meaw",
-        email: "m@m.co",
-        role: "admin",
-        password: "1234",
-        available: true
-      },
-      {
-        _id: "asadadfsd",
-        firstname: "Meaw4",
-        lastname: "Meaw",
-        email: "m@m.co",
-        role: "user",
-        password: "1234",
-        available: true
-      },
-    ];
+  async created() {
+    let data = await axios.post('/auth/getUser',{})
+    console.log(data)
+    this.users = data.data.result
   }
 };
 </script>
