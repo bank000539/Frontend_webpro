@@ -8,12 +8,13 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import App from './App'
 import router from './router'
-
+import axios from 'axios'
 Vue.use(BootstrapVue)
 Vue.use(Vuetify)
 
 Vue.config.productionTip = false
-
+axios.defaults.baseURL = '//localhost:8081/api'
+axios.defaults.withCredentials = true
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

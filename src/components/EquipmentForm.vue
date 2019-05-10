@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
@@ -69,35 +70,54 @@ export default {
     dialog: false
   }),
   methods:{
-      save(){
+      async save(){
         if(this.$route.params.title == "edit"){
           console.log("Edit",this.$route.params.id)
-      console.log(this.Equipment)
+          this.Equipment._id =this.$route.params.id
+          this.Equipment.data = {equipmentName:this.Equipment.name,description:this.Equipment.description}
+          console.log(this.Equipment)
+          let result = await axios.post('/equipment/editEquipment',this.Equipment)
+          console.log(result)
+          if(result.data.code === 500){
+            alert(result.data.result)
+          }else{
+            this.$router.push('/equipment')
+          }
         }
         else{
           console.log("Add")
-      console.log(this.Equipment)
+          this.Equipment.equipmentName = this.Equipment.name
+          let result = await axios.post('/equipment/createEquipment',this.Equipment)
+          console.log(result)
+          if(result.data.code === 500){
+            alert(result.data.result)
+          }else{
+            this.$router.push('/equipment')
+          }
         }
         this.dialog = false
       },
-      setdata(){
+      async setdata(){
+        let data = await axios.post('/equipment/getEquipment',{})
+        let id = this.$route.params.id
+        let findData = data.data.result.find(el=>el._id===id)
         this.Equipment={
-        name:"Test",
-        description:"Test naja"
+        name:findData.equipmentName,
+        description:findData.description
         }
       }
   },
-  created(){
+  async created(){
     if(this.$route.params.title == "view"){
       this._readonly = true
-      this.setdata()
+      await this.setdata()
     }
     else if(this.$route.params.title == "add"){
       this._readonly = false
     }
     else{
       this._readonly = false
-      this.setdata()
+      await this.setdata()
     }
   }
 };
