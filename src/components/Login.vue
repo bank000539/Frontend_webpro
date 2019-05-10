@@ -7,7 +7,7 @@
         </v-flex>
 
         <v-flex xs12 sm6 offset-sm3>
-          <v-text-field v-model="User.password" label="Password" clearable></v-text-field>
+          <v-text-field v-model="User.password" type="password" label="Password" clearable></v-text-field>
         </v-flex>
       </v-layout>
       <v-flex class="text-xs-center">
