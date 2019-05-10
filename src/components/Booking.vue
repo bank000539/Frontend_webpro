@@ -437,7 +437,7 @@ export default {
       doc.text(20, 100, "Room:");
       doc.setFontSize(18);
       doc.setFontType("normal");
-      doc.text(80, 100, this.Book.room.name);
+      doc.text(80, 100, this.Book.room);
 
       doc.setFontSize(20);
       doc.setFontType("bold");
