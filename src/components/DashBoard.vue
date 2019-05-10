@@ -29,7 +29,7 @@
               <td style="text-transform: uppercase;">{{ props.item.checkout }}</td>
               <td class="text-xs-left">
                 <v-btn color="info" v-bind:to="'/booking/view/'+props.item._id">VIEW</v-btn>
-                <v-btn color="success" v-bind:to="'/booking/edit/'+props.item._id">EDIT</v-btn>
+                <v-btn v-if="n!=3" color="success" v-bind:to="'/booking/edit/'+props.item._id">EDIT</v-btn>
                 <v-btn color="error" @click="confirm(props.item._id)">DELETE</v-btn>
               </td>
             </template>

@@ -38,9 +38,21 @@
           min-width="290px"
         >
           <template v-slot:activator="{ on }">
-            <v-text-field v-model="Book.date" :disabled="editmode" :readonly="_readonly" label="Date" v-on="on"></v-text-field>
+            <v-text-field
+              v-model="Book.date"
+              :disabled="editmode"
+              :readonly="_readonly"
+              label="Date"
+              v-on="on"
+            ></v-text-field>
           </template>
-          <v-date-picker v-model="Book.date" :disabled="editmode" :readonly="_readonly" no-title scrollable>
+          <v-date-picker
+            v-model="Book.date"
+            :disabled="editmode"
+            :readonly="_readonly"
+            no-title
+            scrollable
+          >
             <v-spacer></v-spacer>
             <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
             <v-btn flat color="primary" @click="$refs.menu.save(Book.date)">OK</v-btn>
@@ -54,7 +66,13 @@
         <v-subheader>START TIME</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Time" v-model="Book.start_time" :disabled="editmode" :readonly="_readonly" type="time"></v-text-field>
+        <v-text-field
+          label="Time"
+          v-model="Book.start_time"
+          :disabled="editmode"
+          :readonly="_readonly"
+          type="time"
+        ></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -63,7 +81,13 @@
         <v-subheader>END TIME</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Time" v-model="Book.end_time" :disabled="editmode" :readonly="_readonly" type="time"></v-text-field>
+        <v-text-field
+          label="Time"
+          v-model="Book.end_time"
+          :disabled="editmode"
+          :readonly="_readonly"
+          type="time"
+        ></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -106,7 +130,13 @@
           <template v-for="(item, index) in Book.equipments">
             <v-list-tile :key="item._id" justify-center>
               {{item.name}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <v-text-field label="Amount" :disabled="editmode" :readonly="_readonly" :value="item.amount" type="number"></v-text-field>
+              <v-text-field
+                label="Amount"
+                :disabled="editmode"
+                :readonly="_readonly"
+                :value="item.amount"
+                type="number"
+              ></v-text-field>
               <!-- <v-switch
                 v-model="item.defaultcheck"
                 :readonly="_readonly"
@@ -123,7 +153,12 @@
         <v-subheader>SUBJECT</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field v-model="Book.subject" :disabled="editmode" :readonly="_readonly" label="SUBJECT"></v-text-field>
+        <v-text-field
+          v-model="Book.subject"
+          :disabled="editmode"
+          :readonly="_readonly"
+          label="SUBJECT"
+        ></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -134,7 +169,7 @@
       <v-flex xs7>
         <v-select
           :items="status"
-          :readonly="_readonly"
+          :readonly="_readonlystatus"
           v-model="Book.status"
           label="STATUS"
           style="text-transform: uppercase;"
@@ -248,7 +283,7 @@
           </v-layout>
           <v-layout wrap>
             <v-flex xs3 offset-xs1>
-              <v-subheader >CHECKOUT</v-subheader>
+              <v-subheader>CHECKOUT</v-subheader>
             </v-flex>
             <v-flex xs7>
               <v-text-field readonly>{{Book.checkout?'PASS':'NOT PASS'}}</v-text-field>
@@ -275,7 +310,7 @@
 
 <script>
 import jsPDF from "jspdf";
-import axios from 'axios'
+import axios from "axios";
 export default {
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
@@ -286,7 +321,8 @@ export default {
     checkout: ["pass", "not pass"],
     dialog: false,
     _readonly: false,
-    editmode:false,
+    _readonlystatus: false,
+    editmode: false,
     Book: {
       date: new Date().toISOString().substr(0, 10),
       user: {
@@ -305,54 +341,68 @@ export default {
       description: ""
     }
   }),
-   async created() {
+  async created() {
     if (this.$route.params.title == "view") {
       this._readonly = true;
-       this.setdata();
+      this._readonlystatus = true;
+      this.setdata();
     } else if (this.$route.params.title == "add") {
       this.getdata();
-      this.status= ["waiting"],
-      this._readonly = false;
+
+      this._readonlystatus = false;
+      (this.status = ["waiting"]), (this._readonly = false);
     } else {
-      this.editmode = true
+      this.editmode = true;
       this._readonly = false;
-       this.setdata();
+      this.setdata();
     }
   },
   methods: {
     async save() {
       if (this.$route.params.title == "edit") {
         console.log("Edit", this.$route.params.id, this.Book);
-        let update = {checkout:this.Book.checkout,status:this.Book.status}
-        let result = await axios.post('/room/editBooking',{_id:this.$route.params.id,data:update})
-        if(result.data.code === 500){
-            alert(result.data.result)
-        }else{
-          this.$router.push('/dashboard')
+        let update = { checkout: this.Book.checkout, status: this.Book.status };
+        let result = await axios.post("/room/editBooking", {
+          _id: this.$route.params.id,
+          data: update
+        });
+        if (result.data.code === 500) {
+          alert(result.data.result);
+        } else {
+          this.$router.push("/dashboard");
         }
       } else {
         console.log("Add", this.Book);
-        let bookData = this.Book
-        let dateTime =  bookData.date.split("-");
-        let day = new Date(parseInt(dateTime[0]),parseInt(dateTime[1]),parseInt(dateTime[2]))
-        day.setHours(parseInt(bookData.start_time.split(":")[0]))
-        day.setMinutes(parseInt(bookData.start_time.split(":")[1]))
-        bookData.start= day.getTime()
-        day.setHours(parseInt(bookData.end_time.split(":")[0]))
-        day.setMinutes(parseInt(bookData.end_time.split(":")[1]))
-        bookData.end= day.getTime()
-        bookData.roomName = bookData.room.roomName
-        bookData.equipment = bookData.equipments
-        console.log(bookData)
-        let result = await axios.post('/room/bookingRoom',bookData)
-        if(result.data.code === 500){
-          if(typeof(result.data.result)===typeof("")){
-            alert(result.data.result)
-          }else{
-            alert("booking overlap "+new Date(result.data.result.start).toString() +" - " + new Date(result.data.result.end).toString() )
+        let bookData = this.Book;
+        let dateTime = bookData.date.split("-");
+        let day = new Date(
+          parseInt(dateTime[0]),
+          parseInt(dateTime[1]),
+          parseInt(dateTime[2])
+        );
+        day.setHours(parseInt(bookData.start_time.split(":")[0]));
+        day.setMinutes(parseInt(bookData.start_time.split(":")[1]));
+        bookData.start = day.getTime();
+        day.setHours(parseInt(bookData.end_time.split(":")[0]));
+        day.setMinutes(parseInt(bookData.end_time.split(":")[1]));
+        bookData.end = day.getTime();
+        bookData.roomName = bookData.room.roomName;
+        bookData.equipment = bookData.equipments;
+        console.log(bookData);
+        let result = await axios.post("/room/bookingRoom", bookData);
+        if (result.data.code === 500) {
+          if (typeof result.data.result === typeof "") {
+            alert(result.data.result);
+          } else {
+            alert(
+              "booking overlap " +
+                new Date(result.data.result.start).toString() +
+                " - " +
+                new Date(result.data.result.end).toString()
+            );
           }
-        }else{
-          this.$router.push('/')
+        } else {
+          this.$router.push("/");
         }
       }
       this.dialog = false;
@@ -361,18 +411,24 @@ export default {
       let resultUser = await axios.post("auth/checkLogin", this.User);
       console.log(resultUser.data.result);
       if (this.$route.params.title == "add") {
-        this.Book.user ={
-        firstName: resultUser.data.result.firstName,
-        lastName: resultUser.data.result.lastName
-      }
+        this.Book.user = {
+          firstName: resultUser.data.result.firstName,
+          lastName: resultUser.data.result.lastName
+        };
       }
 
-      let result = await axios.post('/room/getRoom',{})
-      console.log(result)
-      this.rooms = result.data.result.map(el=>{el.name = el.roomName;return el})
-      let data = await axios.post('/equipment/getEquipment',{})
-      console.log(data)
-      this.equipments = data.data.result.map(el=>{el.name = el.equipmentName;return el})
+      let result = await axios.post("/room/getRoom", {});
+      console.log(result);
+      this.rooms = result.data.result.map(el => {
+        el.name = el.roomName;
+        return el;
+      });
+      let data = await axios.post("/equipment/getEquipment", {});
+      console.log(data);
+      this.equipments = data.data.result.map(el => {
+        el.name = el.equipmentName;
+        return el;
+      });
     },
     updateequip() {
       // this.equipments = this.Book.room.equipments
@@ -388,24 +444,44 @@ export default {
     async setdata() {
       await this.getdata();
       let result2 = await axios.post("/room/getBooking", {});
-      let bookData = result2.data.result.find(el=>{return el._id===this.$route.params.id})
-      this.Book.checkout = bookData.checkout
-      this.Book.description = bookData.description
-      this.Book.subject = bookData.subject
-      this.Book.status = bookData.status
-      let time = new Date(bookData.start)
-      this.Book.date = time.toISOString().substr(0, 10),
-      this.Book.equipments = bookData.equipment
-      this.Book.start_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")
-      time = new Date(bookData.end)
-      this.Book.end_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")
-      this.Book.user = bookData.user
-      this.Book.room = bookData.roomName
-      let temp = this.Book
-      this.Book = {}
-      this.Book = temp
-
- 
+      let bookData = result2.data.result.find(el => {
+        return el._id === this.$route.params.id;
+      });
+      this.Book.checkout = bookData.checkout;
+      this.Book.description = bookData.description;
+      this.Book.subject = bookData.subject;
+      this.Book.status = bookData.status;
+      if (this.Book.status == "approve" && this.$route.params.title == "edit") {
+        this._readonlystatus = true;
+      }
+      else if ( this.$route.params.title == "edit") {
+        this._readonlystatus = false;
+      }
+      let time = new Date(bookData.start);
+      (this.Book.date = time.toISOString().substr(0, 10)),
+        (this.Book.equipments = bookData.equipment);
+      this.Book.start_time =
+        (time.getHours().toString().length !== 1
+          ? time.getHours()
+          : "0" + time.getHours()) +
+        ":" +
+        (time.getMinutes().toString().length !== 1
+          ? time.getMinutes()
+          : time.getMinutes() + "0");
+      time = new Date(bookData.end);
+      this.Book.end_time =
+        (time.getHours().toString().length !== 1
+          ? time.getHours()
+          : "0" + time.getHours()) +
+        ":" +
+        (time.getMinutes().toString().length !== 1
+          ? time.getMinutes()
+          : time.getMinutes() + "0");
+      this.Book.user = bookData.user;
+      this.Book.room = bookData.roomName;
+      let temp = this.Book;
+      this.Book = {};
+      this.Book = temp;
     },
     download() {
       var doc = new jsPDF();
