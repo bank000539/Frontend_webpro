@@ -5,7 +5,7 @@
         <v-subheader>First Name</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Firstname" v-model="Book.user.firstname" readonly></v-text-field>
+        <v-text-field label="FirstName" v-model="Book.user.firstName" readonly></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -14,7 +14,7 @@
         <v-subheader>Last Name</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Lastname" v-model="Book.user.lastname" readonly></v-text-field>
+        <v-text-field label="LastName" v-model="Book.user.lastName" readonly></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -285,8 +285,8 @@ export default {
     Book: {
       date: new Date().toISOString().substr(0, 10),
       user: {
-        firstname: "",
-        lastname: ""
+        firstName: "",
+        lastName: ""
       },
       start_time: "00:00:00",
       end_time: "00:00:00",
@@ -349,8 +349,8 @@ export default {
       console.log(resultUser.data.result);
       if (this.$route.params.title == "add") {
         this.Book.user ={
-        firstname: resultUser.data.result.firstName,
-        lastname: resultUser.data.result.lastName
+        firstName: resultUser.data.result.firstName,
+        lastName: resultUser.data.result.lastName
       }
       }
 
@@ -409,7 +409,7 @@ export default {
       doc.text(
         80,
         70,
-        this.Book.user.firstname + " " + this.Book.user.lastname
+        this.Book.user.firstName + " " + this.Book.user.lastName
       );
 
       doc.setFontSize(20);
