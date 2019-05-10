@@ -184,7 +184,7 @@
         <v-switch
           :disabled="$route.params.title ==='add'"
           v-model="Book.checkout"
-          :readonly="_readonly"
+          :readonly="_readonlycheckout"
           :label="Book.checkout?'PASS':'NOT PASS'"
           color="success"
         ></v-switch>
@@ -322,6 +322,7 @@ export default {
     dialog: false,
     _readonly: false,
     _readonlystatus: false,
+    _readonlycheckout: false,
     editmode: false,
     Book: {
       date: new Date().toISOString().substr(0, 10),
@@ -345,11 +346,15 @@ export default {
     if (this.$route.params.title == "view") {
       this._readonly = true;
       this._readonlystatus = true;
+      this._readonlycheckout = true;
+      
       this.setdata();
     } else if (this.$route.params.title == "add") {
       this.getdata();
 
       this._readonlystatus = false;
+
+      this._readonlycheckout = true;
       (this.status = ["waiting"]), (this._readonly = false);
     } else {
       this.editmode = true;
@@ -453,10 +458,13 @@ export default {
       this.Book.status = bookData.status;
       if (this.Book.status == "approve" && this.$route.params.title == "edit") {
         this._readonlystatus = true;
+        this._readonlycheckout = false;
       }
       else if ( this.$route.params.title == "edit") {
         this._readonlystatus = false;
+        this._readonlycheckout = true;
       }
+
       let time = new Date(bookData.start);
       (this.Book.date = time.toISOString().substr(0, 10)),
         (this.Book.equipments = bookData.equipment);
