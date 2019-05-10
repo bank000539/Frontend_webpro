@@ -38,7 +38,7 @@
               <td class="text-xs-left">
                 <v-btn color="info" v-bind:to="'/booking/view/'+props.item._id">VIEW</v-btn>
                 <v-btn color="success" v-bind:to="'/booking/edit/'+props.item._id">EDIT</v-btn>
-                <v-btn color="error">DELETE</v-btn>
+                <v-btn color="error" @click="confirm(props.item._id)">DELETE</v-btn>
               </td>
             </template>
             <template v-slot:no-results>
@@ -51,6 +51,19 @@
           </v-data-table>
         </v-card>
       </v-tab-item>
+          <v-layout row justify-center>
+      <v-dialog v-model="dialog" persistent max-width="800">
+        <template></template>
+        <v-card>
+          <v-card-title class="headline">CONFIRM DELETE?</v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" @click="dialog = false">BACK</v-btn>
+            <v-btn color="error" @click="del(del_id)">CONFIRM</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
     </v-tabs>
   </div>
 </template>
@@ -61,6 +74,8 @@ export default {
   data() {
     return {
       search: "",
+      del_id: "",
+      dialog: false,
       tabs:null,
       status: ["waiting", "approve", "denied"],
       headers: [
@@ -83,6 +98,10 @@ export default {
     };
   },
   methods: {
+    confirm(id) {
+      this.dialog = true;
+      this.del_id = id;
+    },
     del(id) {}
   },
   async created() {
