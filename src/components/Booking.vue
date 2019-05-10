@@ -224,7 +224,7 @@ export default {
     menu: false,
     rooms: [],
     equipments: [],
-    status: ["waiting", "approve", "denied","pass", "not pass"],
+    status: ["waiting", "approve", "denied"],
     checkout: ["pass", "not pass"],
     dialog: false,
     _readonly: false,
