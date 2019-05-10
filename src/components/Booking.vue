@@ -270,6 +270,7 @@
 
 <script>
 import jsPDF from "jspdf";
+import axios from 'axios'
 export default {
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
@@ -311,158 +312,57 @@ export default {
     }
   },
   methods: {
-    save() {
+    async save() {
       if (this.$route.params.title == "edit") {
         console.log("Edit", this.$route.params.id, this.Room);
       } else {
         console.log("Add", this.Book);
+        let bookData = this.Book
+        let dateTime =  bookData.date.split("-");
+        let day = new Date(parseInt(dateTime[0]),parseInt(dateTime[1]),parseInt(dateTime[2]))
+        day.setHours(parseInt(bookData.start_time.split(":")[0]))
+        day.setMinutes(parseInt(bookData.start_time.split(":")[1]))
+        bookData.start= day.getTime()
+        day.setHours(parseInt(bookData.end_time.split(":")[0]))
+        day.setMinutes(parseInt(bookData.end_time.split(":")[1]))
+        bookData.end= day.getTime()
+        bookData.roomName = bookData.room.roomName
+        console.log(bookData)
+        let result = await axios.post('/room/bookingRoom',bookData)
+        if(result.data.code === 500){
+          if(typeof(result.data.result)===typeof("")){
+            alert(result.data.result)
+          }else{
+            alert("booking overlap "+new Date(result.data.result.start).toString() +" - " + new Date(result.data.result.end).toString() )
+          }
+        }
       }
       this.dialog = false;
     },
-    getdata() {
-      this.rooms = [
-        {
-          name: "6275",
-          equipments: [
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 2,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asd",
-              name: "Lecture Chair",
-              description: "",
-              amount: 40,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 1,
-              defaultcheck: false,
-              divider: true,
-              inset: true
-            }
-          ],
-          support: {
-            _id: "asd3",
-            firstname: "Meaw3",
-            lastname: "Min2",
-            email: "test@mail.com",
-            role: "support",
-            available: true
-          },
-          description: "Lecture Room"
-        },
-        {
-          name: "6273",
-          equipments: [
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 41,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asd",
-              name: "Lecture Chair",
-              description: "",
-              amount: 40,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 1,
-              defaultcheck: false,
-              divider: true,
-              inset: true
-            }
-          ],
-          support: {
-            _id: "asd3",
-            firstname: "Meaw3",
-            lastname: "Min2",
-            email: "test@mail.com",
-            role: "support",
-            available: true
-          },
-          description: "Lab Room"
-        },
-        {
-          name: "6276",
-          equipments: [
-            {
-              _id: "asasdd",
-              name: "Computer",
-              description: "",
-              amount: 2,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asd",
-              name: "Lecture Chair",
-              description: "",
-              amount: 40,
-              defaultcheck: true,
-              divider: true,
-              inset: true
-            },
-            {
-              _id: "asqewd",
-              name: "Projecture",
-              description: "",
-              amount: 1,
-              defaultcheck: false,
-              divider: true,
-              inset: true
-            }
-          ],
-          support: {
-            _id: "asd3",
-            firstname: "Meaw3",
-            lastname: "Min2",
-            email: "test@mail.com",
-            role: "support",
-            available: true
-          },
-          description: "Lecture Room"
-        }
-      ];
-
-      this.equipments = [
-        {
-          _id: "asd",
-          name: "Lecture Chair",
-          description: ""
-        },
-        {
-          _id: "asasdd",
-          name: "Computer",
-          description: ""
-        },
-        {
-          _id: "asqewd",
-          name: "Projecture",
-          description: ""
-        }
-      ];
+    async getdata() {
+      let result = await axios.post('/room/getRoom',{})
+      console.log(result)
+      this.rooms = result.data.result.map(el=>{el.name = el.roomName;return el})
+      let data = await axios.post('/equipment/getEquipment',{})
+      console.log(data)
+      this.equipments = data.data.result.map(el=>{el.name = el.equipmentName;return el})
+      // this.equipments = [
+      //   {
+      //     _id: "asd",
+      //     name: "Lecture Chair",
+      //     description: ""
+      //   },
+      //   {
+      //     _id: "asasdd",
+      //     name: "Computer",
+      //     description: ""
+      //   },
+      //   {
+      //     _id: "asqewd",
+      //     name: "Projecture",
+      //     description: ""
+      //   }
+      // ];
     },
     updateequip() {
       // this.equipments = this.Book.room.equipments
