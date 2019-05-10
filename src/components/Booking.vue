@@ -343,6 +343,15 @@ export default {
       this.dialog = false;
     },
     async getdata() {
+      let resultUser = await axios.post("auth/checkLogin", this.User);
+      console.log(resultUser.data.result);
+      if (this.$route.params.title == "add") {
+        this.Book.user ={
+        firstname: resultUser.data.result.firstName,
+        lastname: resultUser.data.result.lastName
+      }
+      }
+
       let result = await axios.post('/room/getRoom',{})
       console.log(result)
       this.rooms = result.data.result.map(el=>{el.name = el.roomName;return el})
