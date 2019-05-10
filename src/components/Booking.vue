@@ -5,7 +5,7 @@
         <v-subheader>First Name</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Firstname" v-model="Book.user.firstname" readonly></v-text-field>
+        <v-text-field label="Firstname" v-model="Book.user.firstname" :disabled="editmode" readonly></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -14,7 +14,7 @@
         <v-subheader>Last Name</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Lastname" v-model="Book.user.lastname" readonly></v-text-field>
+        <v-text-field label="Lastname" v-model="Book.user.lastname" :disabled="editmode" readonly></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -30,6 +30,7 @@
           :nudge-right="40"
           :return-value.sync="date"
           lazy
+          :disabled="editmode"
           :readonly="_readonly"
           transition="scale-transition"
           offset-y
@@ -37,9 +38,9 @@
           min-width="290px"
         >
           <template v-slot:activator="{ on }">
-            <v-text-field v-model="Book.date" :readonly="_readonly" label="Date" v-on="on"></v-text-field>
+            <v-text-field v-model="Book.date" :disabled="editmode" :readonly="_readonly" label="Date" v-on="on"></v-text-field>
           </template>
-          <v-date-picker v-model="Book.date" :readonly="_readonly" no-title scrollable>
+          <v-date-picker v-model="Book.date" :disabled="editmode" :readonly="_readonly" no-title scrollable>
             <v-spacer></v-spacer>
             <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
             <v-btn flat color="primary" @click="$refs.menu.save(Book.date)">OK</v-btn>
@@ -53,7 +54,7 @@
         <v-subheader>START TIME</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Time" v-model="Book.start_time" :readonly="_readonly" type="time"></v-text-field>
+        <v-text-field label="Time" v-model="Book.start_time" :disabled="editmode" :readonly="_readonly" type="time"></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -62,7 +63,7 @@
         <v-subheader>END TIME</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Time" v-model="Book.end_time" :readonly="_readonly" type="time"></v-text-field>
+        <v-text-field label="Time" v-model="Book.end_time" :disabled="editmode" :readonly="_readonly" type="time"></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -74,6 +75,7 @@
         <v-select
           :items="rooms"
           v-model="Book.room"
+          :disabled="editmode"
           :readonly="_readonly"
           item-text="name"
           item-value="name"
@@ -97,13 +99,14 @@
           multiple
           chips
           @change="updatefield()"
+          :disabled="editmode"
           :readonly="_readonly"
         ></v-combobox>
         <v-list one-line style="background-color: transparent;">
           <template v-for="(item, index) in Book.equipments">
             <v-list-tile :key="item._id" justify-center>
               {{item.name}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <v-text-field label="Amount" :readonly="_readonly" :value="item.amount" type="number"></v-text-field>
+              <v-text-field label="Amount" :disabled="editmode" :readonly="_readonly" :value="item.amount" type="number"></v-text-field>
               <!-- <v-switch
                 v-model="item.defaultcheck"
                 :readonly="_readonly"
@@ -120,7 +123,7 @@
         <v-subheader>SUBJECT</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field v-model="Book.subject" :readonly="_readonly" label="SUBJECT"></v-text-field>
+        <v-text-field v-model="Book.subject" :disabled="editmode" :readonly="_readonly" label="SUBJECT"></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -160,6 +163,7 @@
         <v-textarea
           name="input-7-1"
           :readonly="_readonly"
+          :disabled="editmode"
           v-model="Book.description"
           label="Description"
         ></v-textarea>
@@ -282,6 +286,7 @@ export default {
     checkout: ["pass", "not pass"],
     dialog: false,
     _readonly: false,
+    editmode:false,
     Book: {
       date: new Date().toISOString().substr(0, 10),
       user: {
@@ -309,6 +314,7 @@ export default {
       this.status= ["waiting"],
       this._readonly = false;
     } else {
+      this.editmode = true
       this._readonly = false;
        this.setdata();
     }
@@ -316,7 +322,14 @@ export default {
   methods: {
     async save() {
       if (this.$route.params.title == "edit") {
-        console.log("Edit", this.$route.params.id, this.Room);
+        console.log("Edit", this.$route.params.id, this.Book);
+        let update = {checkout:this.Book.checkout,status:this.Book.status}
+        let result = await axios.post('/room/editBooking',{_id:this.$route.params.id,data:update})
+        if(result.data.code === 500){
+            alert(result.data.result)
+        }else{
+          this.$router.push('/dashboard')
+        }
       } else {
         console.log("Add", this.Book);
         let bookData = this.Book
