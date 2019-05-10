@@ -91,7 +91,9 @@ export default {
     this.bookings = result.data.result.map(el=>{
       let time = new Date(el.start)
       el.room = {name:el.roomName}
-      el.date = time.getFullYear()+"-"+time.getMonth()+"-"+time.getDate()
+      el.date = time.getFullYear()+"-"+(time.getMonth().toString().length !== 1
+          ? time.getMonth()
+          : "0"+time.getMonth()) +"-"+time.getDate()
       el.start_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")
       time = new Date(el.end)
       el.end_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")

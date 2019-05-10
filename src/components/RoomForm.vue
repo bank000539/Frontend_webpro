@@ -174,7 +174,7 @@ export default {
       }
       this.dialog = false;
     },
-    getdata() {
+    async getdata() {
       this.supports = [
         {
           _id: "asd",
@@ -201,23 +201,9 @@ export default {
           available: true
         }
       ];
-      this.equipments = [
-        {
-          _id: "asd",
-          name: "Lecture Chair",
-          description: ""
-        },
-        {
-          _id: "asasdd",
-          name: "Computer",
-          description: ""
-        },
-        {
-          _id: "asqewd",
-          name: "Projecture",
-          description: ""
-        }
-      ];
+      let data = await axios.post('/equipment/getEquipment',{})
+      console.log(data)
+      this.equipments = data.data.result.map(el=>{el.name = el.equipmentName;return el})
     },
     updatefield() {
       console.log(this.Room);
