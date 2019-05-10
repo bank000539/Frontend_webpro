@@ -39,6 +39,7 @@ export default {
         alert(result.data.result)
       }else{
         this.$router.push('/')
+        location.reload();
       }
     }
   }
