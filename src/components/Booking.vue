@@ -402,7 +402,7 @@ export default {
             );
           }
         } else {
-          this.$router.push("/");
+          this.$router.push("/dashboard");
         }
       }
       this.dialog = false;
