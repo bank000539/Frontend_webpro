@@ -5,7 +5,7 @@
         <router-link v-bind:to="{ name: 'Login' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>home</v-icon>
+              <v-icon>person</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>LOGIN</v-list-tile-content>
           </v-list-tile>
@@ -21,7 +21,7 @@
         <router-link v-bind:to="{ name: 'Calandar' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
+              <v-icon>calendar_today</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>CALANDAR</v-list-tile-content>
           </v-list-tile>
@@ -29,7 +29,7 @@
         <router-link v-bind:to="{ name: 'Booking' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
+              <v-icon>book</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>BOOKING</v-list-tile-content>
           </v-list-tile>
@@ -37,7 +37,7 @@
         <router-link v-bind:to="{ name: 'DashBoard' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
+              <v-icon>dashboard</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>DASHBOARD BOOKING</v-list-tile-content>
           </v-list-tile>
@@ -45,7 +45,7 @@
         <router-link v-bind:to="{ name: 'Equipment' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
+              <v-icon>dashboard</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>EQUIPMENT MANAGEMENT</v-list-tile-content>
           </v-list-tile>
@@ -53,7 +53,7 @@
         <router-link v-bind:to="{ name: 'Room' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
+              <v-icon>dashboard</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>ROOM MANAGEMENT</v-list-tile-content>
           </v-list-tile>
@@ -61,7 +61,7 @@
         <router-link v-bind:to="{ name: 'User' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
+              <v-icon>dashboard</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>USER MANAGEMENT</v-list-tile-content>
           </v-list-tile>
