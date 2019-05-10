@@ -30,7 +30,7 @@ export default new Router({
       component: Register
     },
     {
-      path: '/calandar',
+      path: '/',
       name: 'Calandar',
       component: Calandar
     },
