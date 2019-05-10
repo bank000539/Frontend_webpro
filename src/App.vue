@@ -81,27 +81,6 @@ export default {
   created() {
     this.checkIfIsLogIn();
   },
-  watch: {
-    isLogin: async function () {
-      let result = await axios.post("auth/checkLogin", this.User);
-
-      if (result.data.code === 500) {
-        alert(result.data.result);
-
-        this.isAdmin = false;
-      } else {
-        this.isAdmin = false;
-        if (result.data.result != null) {
-          this.isLogin = true;
-          if (result.data.result.role == "admin") {
-            this.isAdmin = true;
-          }
-        } else {
-          this.isLogin = false;
-        }
-      }
-    },
-  },
   // updated() {
   //   this.checkIfIsLogIn();
   // },
@@ -114,23 +93,6 @@ export default {
       } else {
         this.isLogin = false;
         this.$router.push("/");
-      }
-    },
-    async checkLogIn() {
-      let result = await axios.post("auth/checkLogin", this.User);
-      console.log(result);
-
-      if (result.data.code === 500) {
-        alert(result.data.result);
-
-        this.isAdmin = false;
-      } else {
-        this.isAdmin = false;
-        if (result.data.result != null) {
-          return true
-        } else {
-          return false
-        }
       }
     },
     async checkIfIsLogIn() {
@@ -150,6 +112,27 @@ export default {
           }
         } else {
           this.isLogin = false;
+        }
+      }
+    },
+    async checkLogIn() {
+      let result = await axios.post("auth/checkLogin", this.User);
+      console.log(result);
+
+      if (result.data.code === 500) {
+        alert(result.data.result);
+
+          return false
+        this.isAdmin = false;
+      } else {
+        this.isAdmin = false;
+        if (result.data.result != null) {
+          return true
+          if (result.data.result.role == "admin") {
+            this.isAdmin = true;
+          }
+        } else {
+          return false
         }
       }
     }
