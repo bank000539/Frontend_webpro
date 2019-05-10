@@ -5,39 +5,39 @@
         <router-link v-bind:to="{ name: 'Calandar' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
+              <v-icon>calendar_today</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>CALANDAR</v-list-tile-content>
           </v-list-tile>
         </router-link>
-        <router-link v-bind:to="{ name: 'DashBoard' }" class="side_bar_link">
+        <router-link v-if="isLogin" v-bind:to="{ name: 'DashBoard' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
+              <v-icon>dashboard</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>DASHBOARD BOOKING</v-list-tile-content>
           </v-list-tile>
         </router-link>
-        <router-link v-bind:to="{ name: 'Equipment' }" class="side_bar_link">
+        <router-link v-if="isAdmin" v-bind:to="{ name: 'Equipment' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
+              <v-icon>dashboard</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>EQUIPMENT MANAGEMENT</v-list-tile-content>
           </v-list-tile>
         </router-link>
-        <router-link v-bind:to="{ name: 'Room' }" class="side_bar_link">
+        <router-link v-if="isAdmin" v-bind:to="{ name: 'Room' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
+              <v-icon>dashboard</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>ROOM MANAGEMENT</v-list-tile-content>
           </v-list-tile>
         </router-link>
-        <router-link v-bind:to="{ name: 'User' }" class="side_bar_link">
+        <router-link v-if="isAdmin" v-bind:to="{ name: 'User' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
-              <v-icon>contact_mail</v-icon>
+              <v-icon>dashboard</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>USER MANAGEMENT</v-list-tile-content>
           </v-list-tile>
@@ -72,7 +72,8 @@ import axios from "axios";
 export default {
   data: () => ({
     drawer: null,
-    isLogin: false
+    isLogin: false,
+    isAdmin: false
   }),
   props: {
     source: String
@@ -90,17 +91,25 @@ export default {
       if (result.data.code === 500) {
         alert(result.data.result);
       } else {
+        this.isLogin = false;
         this.$router.push("/");
       }
     },
     async checkIfIsLogIn() {
       let result = await axios.post("auth/checkLogin", this.User);
       console.log(result);
+
       if (result.data.code === 500) {
         alert(result.data.result);
+
+        this.isAdmin = false;
       } else {
+        this.isAdmin = false;
         if (result.data.result != null) {
           this.isLogin = true;
+          if (result.data.result.role == "admin") {
+            this.isAdmin = true;
+          }
         } else {
           this.isLogin = false;
         }
