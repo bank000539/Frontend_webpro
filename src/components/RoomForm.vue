@@ -175,32 +175,11 @@ export default {
       this.dialog = false;
     },
     async getdata() {
-      this.supports = [
-        {
-          _id: "asd",
-          firstname: "Meaw",
-          lastname: "Min",
-          email: "test@mail.com",
-          role: "support",
-          available: true
-        },
-        {
-          _id: "asd2",
-          firstname: "Meaw2",
-          lastname: "Min2",
-          email: "test@mail.com",
-          role: "support",
-          available: true
-        },
-        {
-          _id: "asd3",
-          firstname: "Meaw3",
-          lastname: "Min2",
-          email: "test@mail.com",
-          role: "support",
-          available: true
-        }
-      ];
+      
+    let datasup = await axios.post('/auth/getUser',{})
+        let role = 'support'
+        let findData = datasup.data.result.find(el=>el.role===role)
+        this.supports=findData
       let data = await axios.post('/equipment/getEquipment',{})
       console.log(data)
       this.equipments = data.data.result.map(el=>{el.name = el.equipmentName;return el})
