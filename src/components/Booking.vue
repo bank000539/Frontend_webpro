@@ -300,20 +300,17 @@ export default {
       description: ""
     }
   }),
-   created() {
-     this.getdata().then(async el=>{
-       if (this.$route.params.title == "view") {
+   async created() {
+    if (this.$route.params.title == "view") {
       this._readonly = true;
-       await this.setdata();
+       this.setdata();
     } else if (this.$route.params.title == "add") {
       this.status= ["waiting"],
       this._readonly = false;
     } else {
       this._readonly = false;
-       await this.setdata();
+       this.setdata();
     }
-     });
-    
   },
   methods: {
     async save() {
@@ -364,23 +361,24 @@ export default {
       this.Book.equipments[this.Book.equipments.length - 1].amount = 1;
     },
     async setdata() {
+      await this.getdata();
       let result2 = await axios.post("/room/getBooking", {});
       let bookData = result2.data.result.find(el=>{return el._id===this.$route.params.id})
       this.Book.checkout = bookData.checkout
-      this.Book.description = bookData.descirption
+      this.Book.description = bookData.description
       this.Book.subject = bookData.subject
       this.Book.status = bookData.status
       let time = new Date(bookData.start)
       this.Book.date = time.toISOString().substr(0, 10),
-      this.Book.equipments = bookData.equipment===null?[]:bookData.equipment
+      this.Book.equipments = bookData.equipment
       this.Book.start_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")
       time = new Date(bookData.end)
       this.Book.end_time = (time.getHours().toString().length!==1?time.getHours():"0"+time.getHours())+":"+(time.getMinutes().toString().length!==1?time.getMinutes():time.getMinutes()+"0")
       this.Book.user = {}
-      this.Book.room.name = bookData.roomName
-    console.log(result2.data.result);
-    console.log(bookData);
-    console.log(this.Book);
+      this.Book.room = bookData.roomName
+      let temp = this.Book
+      this.Book = {}
+      this.Book = temp
  
     },
     download() {
