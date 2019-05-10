@@ -5,7 +5,7 @@
         <v-subheader>First Name</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Firstname" v-model="Book.user.firstname" :readonly="_readonly"></v-text-field>
+        <v-text-field label="Firstname" v-model="Book.user.firstname" readonly></v-text-field>
       </v-flex>
     </v-layout>
 
@@ -14,7 +14,7 @@
         <v-subheader>Last Name</v-subheader>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Lastname" v-model="Book.user.lastname" :readonly="_readonly"></v-text-field>
+        <v-text-field label="Lastname" v-model="Book.user.lastname" readonly></v-text-field>
       </v-flex>
     </v-layout>
 

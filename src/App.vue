@@ -79,11 +79,9 @@ export default {
   },
   created() {
     this.checkIfIsLogIn();
-    console.log(this.isLogin);
   },
   updated() {
     this.checkIfIsLogIn();
-    console.log(this.isLogin);
   },
   methods: {
     async logout() {
@@ -92,7 +90,6 @@ export default {
       if (result.data.code === 500) {
         alert(result.data.result);
       } else {
-        // this.isLogin = false;
         this.$router.push("/");
       }
     },
