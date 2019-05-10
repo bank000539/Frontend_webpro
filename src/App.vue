@@ -18,7 +18,7 @@
             <v-list-tile-content>DASHBOARD BOOKING</v-list-tile-content>
           </v-list-tile>
         </router-link>
-        <router-link v-if="isAdmin" v-bind:to="{ name: 'Equipment' }" class="side_bar_link">
+        <router-link v-if="isLogin&&isAdmin" v-bind:to="{ name: 'Equipment' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
               <v-icon>dashboard</v-icon>
@@ -26,7 +26,7 @@
             <v-list-tile-content>EQUIPMENT MANAGEMENT</v-list-tile-content>
           </v-list-tile>
         </router-link>
-        <router-link v-if="isAdmin" v-bind:to="{ name: 'Room' }" class="side_bar_link">
+        <router-link v-if="isLogin&&isAdmin" v-bind:to="{ name: 'Room' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
               <v-icon>dashboard</v-icon>
@@ -34,7 +34,7 @@
             <v-list-tile-content>ROOM MANAGEMENT</v-list-tile-content>
           </v-list-tile>
         </router-link>
-        <router-link v-if="isAdmin" v-bind:to="{ name: 'User' }" class="side_bar_link">
+        <router-link v-if="isLogin&&isAdmin" v-bind:to="{ name: 'User' }" class="side_bar_link">
           <v-list-tile>
             <v-list-tile-action>
               <v-icon>dashboard</v-icon>
@@ -92,16 +92,15 @@ export default {
         alert(result.data.result);
       } else {
         this.isLogin = false;
+        this.isAdmin = false;
         this.$router.push("/");
       }
     },
     async checkIfIsLogIn() {
       let result = await axios.post("auth/checkLogin", this.User);
       console.log(result);
-
       if (result.data.code === 500) {
         alert(result.data.result);
-
         this.isAdmin = false;
       } else {
         this.isAdmin = false;
