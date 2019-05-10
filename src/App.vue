@@ -81,9 +81,6 @@ export default {
   created() {
     this.checkIfIsLogIn();
   },
-  // updated() {
-  //   this.checkIfIsLogIn();
-  // },
   methods: {
     async logout() {
       let result = await axios.post("auth/logout", this.User);
@@ -111,27 +108,6 @@ export default {
           }
         } else {
           this.isLogin = false;
-        }
-      }
-    },
-    async checkLogIn() {
-      let result = await axios.post("auth/checkLogin", this.User);
-      console.log(result);
-
-      if (result.data.code === 500) {
-        alert(result.data.result);
-
-          return false
-        this.isAdmin = false;
-      } else {
-        this.isAdmin = false;
-        if (result.data.result != null) {
-          return true
-          if (result.data.result.role == "admin") {
-            this.isAdmin = true;
-          }
-        } else {
-          return false
         }
       }
     }
