@@ -27,7 +27,7 @@
           <template v-for="(item, index) in Room.equipments">
             <v-list-tile :key="item._id" justify-center>
               {{item.name}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <v-text-field label="Amount" :readonly="_readonly" :value="item.amount" type="number"></v-text-field>
+              <v-text-field label="Amount" :readonly="_readonly" v-model="item.amount" type="number"></v-text-field>
               <v-switch
                 v-model="item.defaultcheck"
                 :readonly="_readonly"

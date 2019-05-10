@@ -1,4 +1,4 @@
-<template>
+<template >
   <v-container fluid>
     <v-layout row>
       <v-flex xs3 offset-xs1>
@@ -37,7 +37,7 @@
           min-width="290px"
         >
           <template v-slot:activator="{ on }">
-            <v-text-field v-model="Book.date" :readonly="_readonly" label="Date" readonly v-on="on"></v-text-field>
+            <v-text-field v-model="Book.date" :readonly="_readonly" label="Date" v-on="on"></v-text-field>
           </template>
           <v-date-picker v-model="Book.date" :readonly="_readonly" no-title scrollable>
             <v-spacer></v-spacer>
@@ -169,6 +169,7 @@
       <v-dialog v-model="dialog" persistent max-width="800">
         <template v-slot:activator="{ on }">
           <v-btn v-if="_readonly==true" color="primary" dark :to="'/dashboard'">CLOSE</v-btn>
+          <v-btn v-if="_readonly==true" color="info" dark @click="download">Download PDF</v-btn>
           <v-btn v-if="_readonly==false" color="error" dark :to="'/dashboard'">CANCEL</v-btn>
           <v-btn v-if="_readonly==false" color="primary" dark v-on="on">SAVE</v-btn>
         </template>
@@ -268,6 +269,7 @@
 </template>
 
 <script>
+import jsPDF from "jspdf";
 export default {
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
@@ -548,6 +550,99 @@ export default {
           }
         ]
       };
+    },
+    download() {
+      var doc = new jsPDF();
+      doc.setFontSize(25);
+      doc.setFontType("bold");
+      doc.text(25, 40, "Booking Computer Engineering Room");
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 70, "Name:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(
+        80,
+        70,
+        this.Book.user.firstname + " " + this.Book.user.lastname
+      );
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 80, "Date:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 80, this.Book.date);
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 90, "From time:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 90, this.Book.start_time);
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(120, 90, "To:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(160, 90, this.Book.end_time);
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 100, "Room:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 100, this.Book.room.name);
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 110, "Subject:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 110, this.Book.subject);
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 120, "Status:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 120, this.Book.status);
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 130, "Checkout:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, 130, this.Book.checkout.toString());
+
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, 140, "Equipments:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      var verticalOffset = 150;
+      for (var i = 0; i < this.Book.equipments.length; i++) {
+        console.log(this.Book.equipments[i])
+        doc.text(40, verticalOffset, this.Book.equipments[i].name);
+        doc.setFontSize(20);
+        doc.setFontType("bold");
+        doc.text(120, verticalOffset, "Amount:");
+        doc.setFontSize(18);
+        doc.setFontType("normal");
+        doc.text(160, verticalOffset, this.Book.equipments[i].amount.toString());
+        verticalOffset += 10;
+      }
+      var loremipsum =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus id eros turpis. Vivamus tempor urna vitae sapien mollis molestie. Vestibulum in lectus non enim bibendum laoreet at at libero. Etiam malesuada erat sed sem blandit in varius orci porttitor. Sed at sapien urna. Fusce augue ipsum, molestie et adipiscing at, varius quis enim. Morbi sed magna est, vel vestibulum urna. Sed tempor ipsum vel mi pretium at elementum urna tempor. Nulla faucibus consectetur felis, elementum venenatis mi mollis gravida. Aliquam mi ante, accumsan eu tempus vitae, viverra quis justo.\n\nProin feugiat augue in augue rhoncus eu cursus tellus laoreet. Pellentesque eu sapien at diam porttitor venenatis nec vitae velit. Donec ultrices volutpat lectus eget vehicula. Nam eu erat mi, in pulvinar eros. Mauris viverra porta orci, et vehicula lectus sagittis id. Nullam at magna vitae nunc fringilla posuere. Duis volutpat malesuada ornare. Nulla in eros metus. Vivamus a posuere libero.";
+      var lines = doc.splitTextToSize(loremipsum, 120);
+      doc.setFontSize(20);
+      doc.setFontType("bold");
+      doc.text(20, verticalOffset, "Description:");
+      doc.setFontSize(18);
+      doc.setFontType("normal");
+      doc.text(80, verticalOffset + 18 / 72, lines);
+      doc.save("sample.pdf");
     }
   }
 };
