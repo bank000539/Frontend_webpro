@@ -305,6 +305,7 @@ export default {
       this._readonly = true;
        this.setdata();
     } else if (this.$route.params.title == "add") {
+      this.getdata();
       this.status= ["waiting"],
       this._readonly = false;
     } else {
