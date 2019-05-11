@@ -14,7 +14,7 @@
       </ul>
     </v-flex>
     <v-flex class="button text-xs-center">
-      <v-btn color="success" v-bind:to="'/booking/add/0'">BOOKING</v-btn>
+      <v-btn color="success" @click="checkIfIsLogIn">BOOKING</v-btn>
     </v-flex>
   </v-layout>
 </template>
@@ -25,6 +25,7 @@ export default {
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
     roomFilter: "All",
+    User: {},
     items: [
       { text: "All", value: "All" }
     ],
@@ -33,6 +34,22 @@ export default {
   computed: {
     filter
   },
+
+methods:{
+async checkIfIsLogIn() {
+      let result = await axios.post("auth/checkLogin", this.User);
+      console.log(result);
+      if (result.data.code === 500) {
+        alert(result.data.result);
+      } else {
+        if (result.data.result != null) {
+          this.$router.push("/booking/add/0");
+        } else {
+          alert("Please, log in before booking.")
+        }
+      }
+    }
+},
   async created() {
     let result = await axios.post('/room/getRoom',{})
     console.log(result)

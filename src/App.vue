@@ -74,6 +74,7 @@ export default {
     drawer: null,
     isLogin: true,
     isAdmin: true,
+    User: {}
   }),
   props: {
     source: String
