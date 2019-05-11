@@ -48,8 +48,8 @@
           :items="supports"
           v-model="Room.support"
           :readonly="_readonly"
-          item-text="firstname"
-          item-value="firstname"
+          item-text="firstName"
+          item-value="firstName"
           return-object
           label="SUPPORT"
         ></v-select>
@@ -140,7 +140,7 @@ export default {
     _readonly: false,
     Room: {
       name: "",
-      support: "",
+      support: {},
       description: "",
       equipments: []
     },
@@ -195,6 +195,7 @@ export default {
         let findData = data.data.result.find(el=>el._id===id)
         findData.name = findData.roomName
         this.Room=findData
+        console.log(this.Room)
     }
   },
   created() {
